@@ -1,4 +1,4 @@
-package ru._1243.Courses.DAO;
+package DAO;
 
 import org.junit.Test;
 

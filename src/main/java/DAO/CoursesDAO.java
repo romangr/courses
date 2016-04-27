@@ -1,7 +1,6 @@
-package ru._1243.Courses.DAO;
+package DAO;
 
 import javase10.t02.cp.ConnectionPool;
-import javase10.t02.cp.Proxy;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

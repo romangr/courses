@@ -1,4 +1,4 @@
-package ru._1243.Courses.DAO;
+package DAO;
 
 import javase10.t02.cp.ConnectionPool;
 
@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.Optional.of;
 
 /**
  * Created by Roman on 25.04.2016.

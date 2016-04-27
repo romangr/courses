@@ -1,4 +1,4 @@
-package ru._1243.Courses.DAO;
+package DAO;
 
 /**
  * Created by Roman on 15.04.2016.

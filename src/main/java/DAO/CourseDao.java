@@ -1,14 +1,12 @@
-package ru._1243.Courses.DAO;
+package DAO;
 
 import javase10.t02.cp.ConnectionPool;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Optional.of;
-import static ru._1243.Courses.DAO.Course.OPEN;
+import static DAO.Course.OPEN;
 
 /**
  * Created by Roman on 25.04.2016.
@@ -96,6 +94,35 @@ public class CourseDao {
                 "users.first_name, users.last_name, users.email, users.password" +
                 " FROM course join users on course.teacher_id = users.id";
         ArrayList<Course> courses = new ArrayList<>();
+        try (Connection connection = connectionPool.takeConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                courses.add(new Course(
+                        rs.getInt("cid"),
+                        new Teacher(
+                                rs.getInt("uid"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
+                                rs.getString("email"),
+                                rs.getString("password")),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getInt("status")
+                ));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return courses;
+    }
+
+    public Set<Course> getAvailibleCourses() {
+        String sql = "SELECT course.id as cid, name, description, status, users.id as uid, " +
+                "users.first_name, users.last_name, users.email, users.password" +
+                " FROM course join users on course.teacher_id = users.id where status = " + Course.OPEN;
+        Set<Course> courses = new HashSet<>();
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();

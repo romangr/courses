@@ -1,7 +1,7 @@
-package ru._1243.Courses.DAO;
+package DAO;
 
 import javase10.t02.cp.ConnectionPool;
-import ru._1243.Courses.DAO.CourseDao;
+
 /**
  * Created by Roman on 15.04.2016.
  */
@@ -22,6 +22,10 @@ public class DAOCreator {
 
     public CourseDao newCourseDao() {
         return new CourseDao(connectionPool);
+    }
+
+    public void closeConnectionPool() {
+
     }
 
 }
