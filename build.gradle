@@ -1,0 +1,30 @@
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Tomcat internal libraries
+    providedCompile 'org.apache.tomcat:tomcat-api:+'
+    providedCompile 'org.apache.tomcat:tomcat-jsp-api:+'
+
+    compile 'com.h2database:h2:+'
+    compile 'org.postgresql:postgresql:9.4-1203-jdbc4'
+
+    // JSTL
+    compile 'javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:+'
+    compile 'org.glassfish.web:javax.servlet.jsp.jstl:+'
+
+    compile 'org.projectlombok:lombok:+'
+
+    compile 'ch.qos.logback:logback-classic:+'
+
+    testCompile 'junit:junit:+'
+}
