@@ -28,15 +28,14 @@ public class AvailibleCoursesTag extends TagSupport {
                     + "<table style=\"border: 1px solid #000;\"><tr><td>"
                     + set.elements().collect(Collectors.joining("</td></tr><tr><td>"))
                     + "</td></tr></table>");*/
-            out.write("Size = <b>(" + set.getSize() + ")</b>"
-                    + "<table style=\"border: 1px solid #000;\">");
+            out.write("<table style=\"border: 1px solid #000;\">");
             Iterator<Course> iterator = set.getIterator();
             while (iterator.hasNext()){
                 Course course = iterator.next();
-                out.write("<tr><td>" + course.getName() + "</td>" +
-                                "<td>" + course.getDescription() + "</td></td>");
+                out.write("<tr><td><a href=\"/course?id=" + course.getId() + "\">" + course.getName() + "</a></td>" +
+                                "<td>" + course.getDescription() + "</td></tr>");
             }
-            out.write("</td></tr></table>");
+            out.write("</table>");
 
         }catch(IOException e){
             throw new JspException(e.getMessage());
