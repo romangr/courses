@@ -16,7 +16,7 @@ dependencies {
     providedCompile 'org.apache.tomcat:tomcat-jsp-api:+'
 
     compile 'com.h2database:h2:+'
-    compile 'org.postgresql:postgresql:9.4-1203-jdbc4'
+    providedCompile 'org.postgresql:postgresql:9.4-1203-jdbc4'
 
     // JSTL
     compile 'javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:+'

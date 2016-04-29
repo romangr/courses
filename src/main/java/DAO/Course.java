@@ -1,8 +1,14 @@
 package DAO;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 /**
  * Created by Roman on 25.04.2016.
  */
+
+@Data
+@AllArgsConstructor
 public class Course {
 
     private final int id;
@@ -14,7 +20,7 @@ public class Course {
     static final int IN_PROCESS = 1;
     static final int FINISHED = 2;
 
-    public Course(int id, Teacher teacher) {
+    /*public Course(int id, Teacher teacher) {
         this.id = id;
         this.teacher = teacher;
     }
@@ -57,5 +63,5 @@ public class Course {
 
     public void setStatus(int status) {
         this.status = status;
-    }
+    }*/
 }
