@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
- * Created by Roman on 27.04.2016.
+ * Roman 27.04.2016.
  */
 @WebFilter("/index.jsp")
 public class IndexSetBeanFilter extends HttpFilter {

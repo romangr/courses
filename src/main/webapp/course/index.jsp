@@ -5,6 +5,7 @@
     <title>Course</title>
 </head>
 <body>
+<h2>${pageContext.request.userPrincipal.name}</h2>
 <%=course.getName()%>
 <br/>
 <%=course.getDescription()%>
