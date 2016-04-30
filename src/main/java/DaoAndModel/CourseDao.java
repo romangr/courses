@@ -1,4 +1,4 @@
-package DAO;
+package DaoAndModel;
 
 import javase10.t02.cp.ConnectionPool;
 
@@ -6,10 +6,10 @@ import java.sql.*;
 import java.util.*;
 
 import static java.util.Optional.of;
-import static DAO.Course.OPEN;
+import static DaoAndModel.Course.OPEN;
 
 /**
- * Created by Roman on 25.04.2016.
+ * Roman 25.04.2016.
  */
 public class CourseDao {
 

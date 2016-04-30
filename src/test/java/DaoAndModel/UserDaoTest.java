@@ -1,4 +1,4 @@
-package DAO;
+package DaoAndModel;
 
 import org.junit.Test;
 
@@ -6,11 +6,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
- * Created by Roman on 25.04.2016.
+ * Roman 25.04.2016.
  */
 public class UserDaoTest {
 
-    private static DAOCreator daoCreator = new DAOCreator("org.postgresql.Driver",
+    private static DaoCreator daoCreator = new DaoCreator("org.postgresql.Driver",
             "jdbc:postgresql://localhost/Courses", "postgres", "Axe2013", 5);
     private static UserDao userDao = daoCreator.newUserDao();
 

@@ -1,7 +1,7 @@
 package servlets;
 
-import DAO.Course;
-import DAO.CourseDao;
+import DaoAndModel.Course;
+import DaoAndModel.CourseDao;
 import listeners.DaoProvider;
 
 import javax.servlet.ServletException;
@@ -10,13 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
 /**
- * Created by Roman on 29.04.2016.
+ * Roman 29.04.2016.
  */
 @WebServlet("/course")
 public class CourseServlet extends HttpServlet {

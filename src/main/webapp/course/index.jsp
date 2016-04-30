@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="course" type="DAO.Course" scope="request"/>
+<jsp:useBean id="course" type="DaoAndModel.Course" scope="request"/>
 <html>
 <head>
     <title>Course</title>

@@ -1,18 +1,18 @@
-package DAO;
+package DaoAndModel;
 
 import javase10.t02.cp.ConnectionPool;
 
 /**
- * Created by Roman on 15.04.2016.
+ * Roman 15.04.2016.
  */
-public class DAOCreator {
+public class DaoCreator {
     private final ConnectionPool connectionPool;
 
-    public DAOCreator() {
+    public DaoCreator() {
         connectionPool = new ConnectionPool();
     }
 
-    public DAOCreator(String driverName, String url, String user, String password, int poolSize) {
+    public DaoCreator(String driverName, String url, String user, String password, int poolSize) {
         connectionPool = new ConnectionPool(driverName, url, user, password, poolSize);
     }
 

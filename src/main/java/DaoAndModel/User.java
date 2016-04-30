@@ -1,7 +1,7 @@
-package DAO;
+package DaoAndModel;
 
 /**
- * Created by Roman on 15.04.2016.
+ * Roman 15.04.2016.
  */
 public class User {
     private final int id;

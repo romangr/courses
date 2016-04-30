@@ -1,16 +1,15 @@
 package taghandlers;
 
-import DAO.Course;
+import DaoAndModel.Course;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.stream.Collectors;
 
 /**
- * Created by Roman on 27.04.2016.
+ * Roman 27.04.2016.
  */
 public class AvailibleCoursesTag extends TagSupport {
 

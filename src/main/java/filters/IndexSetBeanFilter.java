@@ -1,8 +1,7 @@
 package filters;
 
-import DAO.Course;
-import DAO.CourseDao;
-import DAO.CoursesDAO;
+import DaoAndModel.Course;
+import DaoAndModel.CourseDao;
 import listeners.DaoProvider;
 import taghandlers.JSPSetBean;
 

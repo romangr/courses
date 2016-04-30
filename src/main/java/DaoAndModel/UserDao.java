@@ -1,4 +1,4 @@
-package DAO;
+package DaoAndModel;
 
 import javase10.t02.cp.ConnectionPool;
 
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by Roman on 25.04.2016.
+ * Roman 25.04.2016.
  */
 public class UserDao {
 

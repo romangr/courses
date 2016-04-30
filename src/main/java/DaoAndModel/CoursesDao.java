@@ -1,4 +1,4 @@
-package DAO;
+package DaoAndModel;
 
 import javase10.t02.cp.ConnectionPool;
 
@@ -10,9 +10,9 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * Created by Roman on 15.04.2016.
+ * Roman 15.04.2016.
  */
-public interface CoursesDAO<T> {
+public interface CoursesDao<T> {
 
     Optional<T> create(String name);
     void update(T entity);
