@@ -6,13 +6,7 @@
     <title>$Title$</title>
   </head>
   <body>
-  <table>
-    <tr>
-      <td><a href="/my">Мои курсы</a></td>
-    </tr>
-  </table>
-  ${requestScope.get("availibleCoursesBean")}
-  <%=availibleCoursesBean.getSize()%>
+  <jsp:include page="WEB-INF/menu.jsp"/>
   <cst:jspset set="${requestScope.availibleCoursesBean}"/>
   </body>
 </html>

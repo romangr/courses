@@ -13,6 +13,7 @@
     <title>Мои курсы</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/menu.jsp"/>
 <cst:jspset set="${requestScope.myCoursesBean}"/>
 </body>
 </html>

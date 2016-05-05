@@ -10,6 +10,7 @@
 <%--<h2>${pageContext.request.userPrincipal.name}</h2>--%>
 <%--${pageContext.request.isUserInRole(\"student\")}--%>
 <%--${requestScope.get(\"usersCourse\")}--%>
+<jsp:include page="/WEB-INF/menu.jsp"/>
 <table>
     <tr>
         <td>
