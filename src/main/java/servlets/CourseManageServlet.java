@@ -38,7 +38,16 @@ public class CourseManageServlet extends HttpServlet {
                     case "delete":
                         courseDao.getById(parseInt(courseId.get()))
                                 .ifPresent(courseDao::delete);
+                        break;
+                    case "closeRegistration":
+                        courseDao.getById(parseInt(courseId.get()))
+                                .ifPresent(course -> {
+                                    course.setStatus(1);
+                                    courseDao.update(course);
+                                });
+                        break;
                 }
+                resp.sendRedirect("/");
             }
         }
     }

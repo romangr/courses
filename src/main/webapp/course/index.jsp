@@ -13,11 +13,20 @@
 <table>
     <tr>
         <td>
-            <c:if test="${pageContext.request.isUserInRole(\"student\") && !requestScope.get(\"usersCourse\")}">
+            <c:if test="${pageContext.request.isUserInRole(\"student\") && !requestScope.get(\"usersCourse\") && (course.status == 0)}">
                 <form method="post" action="/course">
                     <input type="hidden" value="${course.id}" name="courseId">
                     <input type="hidden" value="${user.id}" name="studentId">
                     <input type="submit" value="Записаться">
+                </form>
+            </c:if>
+        </td>
+        <td>
+            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\") && (course.status == 0)}">
+                <form method="post" action="/course/manage">
+                    <input type="hidden" value="${course.id}" name="courseId">
+                    <input type="hidden" value="closeRegistration" name="action">
+                    <input type="submit" value="Закрыть регистрацию">
                 </form>
             </c:if>
         </td>
