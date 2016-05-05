@@ -12,7 +12,8 @@
         </web-resource-collection>
         <auth-constraint>
             <role-name>tomcat</role-name>
-            <role-name>role1</role-name>
+            <role-name>student</role-name>
+            <role-name>teacher</role-name>
         </auth-constraint>
     </security-constraint>
 
@@ -28,9 +29,12 @@
 
 
     <security-role>
-        <role-name>role1</role-name>
+        <role-name>student</role-name>
     </security-role>
     <security-role>
         <role-name>tomcat</role-name>
+    </security-role>
+    <security-role>
+        <role-name>teacher</role-name>
     </security-role>
 </web-app>

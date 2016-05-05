@@ -151,6 +151,51 @@ public class CourseDao {
         return connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     }
 
+    public Collection<Course> getUserCourses(User user) {
+        String sql = "SELECT course.id cid, course.name, course.description, course.status, " +
+                "users.id uid, users.first_name, users.last_name, users.email, users.password " +
+                "FROM course RIGHT JOIN student_course " +
+                    "ON course.id = student_course.course_id join users " +
+                        "ON course.teacher_id = users.id " +
+                ((user instanceof Student) ? "WHERE student_id = (?)" : "WHERE teacher_id = (?)");
+        Collection<Course> result = new HashSet<>();
+        try (Connection connection = connectionPool.takeConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, user.getId());
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                result.add(new Course(
+                        rs.getInt("cid"),
+                        new Teacher(
+                                rs.getInt("uid"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
+                                rs.getString("email"),
+                                rs.getString("password")),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getInt("status")));
+            }
+            rs.close();
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean addCourseToStudent(Course course, Student student) {
+        String sql = "INSERT INTO student_course (student_id, course_id) VALUES (?, ?)";
+        try (Connection connection = connectionPool.takeConnection();
+             PreparedStatement statement = getStatement(connection, sql)) {
+            statement.setInt(1, student.getId());
+            statement.setInt(2, course.getId());
+            int i = statement.executeUpdate();
+            return i == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     CourseDao(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
     }

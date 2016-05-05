@@ -151,8 +151,38 @@ public class UserDao {
         }
     }
 
-    public Collection<Course> getStudentCourses(Student student) {
-        return null;
+    public Optional<User> getUserByEmail(String email) {
+        String sql = "SELECT id, first_name, last_name, password, type FROM users WHERE email=(?)";
+        User result = null;
+        try (Connection connection = connectionPool.takeConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                switch (rs.getInt("type")) {
+                    case 0:
+                        result = new Student(
+                                rs.getInt("id"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
+                                email,
+                                rs.getString("password"));
+                        break;
+                    case 1:
+                        result = new Teacher(
+                                rs.getInt("id"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
+                                email,
+                                rs.getString("password"));
+                        break;
+                }
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.ofNullable(result);
     }
 
     UserDao(ConnectionPool connectionPool) {

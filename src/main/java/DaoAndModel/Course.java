@@ -2,6 +2,7 @@ package DaoAndModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 25.04.2016 Roman.
