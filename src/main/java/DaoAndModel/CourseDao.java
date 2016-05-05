@@ -186,6 +186,15 @@ public class CourseDao {
 
     public boolean addCourseToStudent(Course course, Student student) {
         String sql = "INSERT INTO student_course (student_id, course_id) VALUES (?, ?)";
+        return updateStudentCourses(course, student, sql);
+    }
+
+    public boolean deleteCourseFromStudent(Course course, Student student) {
+        String sql = "DELETE FROM student_course WHERE student_id = (?) AND course_id = (?)";
+        return updateStudentCourses(course, student, sql);
+    }
+
+    private boolean updateStudentCourses(Course course, Student student, String sql) {
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement statement = getStatement(connection, sql)) {
             statement.setInt(1, student.getId());

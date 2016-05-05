@@ -5,7 +5,10 @@
         <td><a href="/">Главная</a></td>
         <td><a href="/my">Мои курсы</a></td>
         <c:if test="${pageContext.request.userPrincipal == null}">
-            <td><a href="/my">Авторизоваться</a></td>
+            <td><a href="/my">Войти</a></td>
+        </c:if>
+        <c:if test="${pageContext.request.userPrincipal != null}">
+            <td><a href="/logout">Выйти</a></td>
         </c:if>
     </tr>
 </table>

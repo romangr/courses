@@ -46,6 +46,13 @@ public class CourseManageServlet extends HttpServlet {
                                     courseDao.update(course);
                                 });
                         break;
+                    case "editCourse":
+                        courseDao.getById(parseInt(courseId.get()))
+                                .ifPresent(course -> {
+                                    ofNullable(req.getParameter("courseName")).ifPresent(course::setName);
+                                    ofNullable(req.getParameter("courseDescription")).ifPresent(course::setDescription);
+                                    courseDao.update(course);
+                                });
                 }
                 resp.sendRedirect("/");
             }

@@ -21,6 +21,22 @@
                     <input type="submit" value="Записаться">
                 </form>
             </c:if>
+            <c:if test="${pageContext.request.isUserInRole(\"student\") && requestScope.get(\"usersCourse\")}">
+                <form method="post" action="/course">
+                    <input type="hidden" value="${course.id}" name="courseId">
+                    <input type="hidden" value="${user.id}" name="studentId">
+                    <input type="hidden" value="unsubscribe" name="action">
+                    <input type="submit" value="Отписаться">
+                </form>
+            </c:if>
+        </td>
+        <td>
+            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\") && (course.status == 0)}">
+                <form method="get" action="/editCourse">
+                    <input type="hidden" value="${course.id}" name="id">
+                    <input type="submit" value="Изменить курс">
+                </form>
+            </c:if>
         </td>
         <td>
             <c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\") && (course.status == 0)}">

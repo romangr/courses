@@ -64,7 +64,12 @@ public class CourseServlet extends HttpServlet {
                                     Optional<Course> courseOptional = courseDao.getById(parseInt(courseId));
                                     try {
                                         if (courseOptional.isPresent()) {
-                                            courseDao.addCourseToStudent(courseOptional.get(), (Student) user);
+                                            Optional<String> actionOptional = ofNullable(req.getParameter("action"));
+                                            if (!actionOptional.isPresent()){
+                                                courseDao.addCourseToStudent(courseOptional.get(), (Student) user);
+                                            } else {
+                                                courseDao.deleteCourseFromStudent(courseOptional.get(), (Student) user);
+                                            }
                                             resp.sendRedirect("/course?id=" + courseId);
                                         } else {
                                             resp.sendRedirect("/error.html");
