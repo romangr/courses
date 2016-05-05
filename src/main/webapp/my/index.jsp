@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://1243.ru/courses/tags" prefix="cst"%>
+<%@ taglib uri="http://1243.ru/courses/tags" prefix="cst" %>
 <jsp:useBean id="myCoursesBean" type="taghandlers.JSPSetBean" scope="request"/>
 <html>
 <head>
@@ -14,6 +14,13 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/menu.jsp"/>
+<table>
+    <tr>
+        <td>
+            <input type="button" value="Создать курс" onclick="location.href = '/editCourse/'">
+        </td>
+    </tr>
+</table>
 <cst:jspset set="${requestScope.myCoursesBean}"/>
 </body>
 </html>

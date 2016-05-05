@@ -1,7 +1,6 @@
 package servlets;
 
-import DaoAndModel.CourseDao;
-import DaoAndModel.UserDao;
+import DaoAndModel.*;
 import listeners.DaoProvider;
 
 import javax.servlet.ServletException;
@@ -53,8 +52,30 @@ public class CourseManageServlet extends HttpServlet {
                                     ofNullable(req.getParameter("courseDescription")).ifPresent(course::setDescription);
                                     courseDao.update(course);
                                 });
+                        break;
                 }
                 resp.sendRedirect("/");
+            } else {
+                switch (action.get()) {
+                    case "createCourse":
+                        System.out.println("creating course");
+                        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+                        Optional<User> userOptional = userDao.getUserByEmail(req.getUserPrincipal().getName());
+                        if (userOptional.isPresent()) {
+                            Optional<String> courseNameOptional = ofNullable(req.getParameter("courseName"));
+                            Optional<String> courseDescriptionOptional = ofNullable(req.getParameter("courseDescription"));
+
+                            if (courseNameOptional.isPresent() && courseDescriptionOptional.isPresent()) {
+                                Course newCourse = courseDao.create(
+                                        (Teacher) userOptional.get(),
+                                        courseNameOptional.get(),
+                                        courseDescriptionOptional.get()
+                                );
+                                resp.sendRedirect("/course?id=" + newCourse.getId());
+                            }
+                        }
+                        break;
+                }
             }
         }
     }
