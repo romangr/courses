@@ -11,7 +11,7 @@
 
     <tag>
         <name>jspset</name>
-        <tag-class>taghandlers.AvailibleCoursesTag</tag-class>
+        <tag-class>taghandlers.CoursesTableTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>set</name>

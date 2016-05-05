@@ -11,7 +11,7 @@ import java.util.Iterator;
 /**
  * Roman 27.04.2016.
  */
-public class AvailibleCoursesTag extends TagSupport {
+public class CoursesTableTag extends TagSupport {
 
     private JSPSetBean<Course> set;
 

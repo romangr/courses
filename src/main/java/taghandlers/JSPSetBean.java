@@ -1,7 +1,6 @@
 package taghandlers;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class JSPSetBean<T> {
@@ -10,6 +9,13 @@ public class JSPSetBean<T> {
 
     public JSPSetBean(Set<T> set){
         this.set = set;
+    }
+
+    public JSPSetBean(Collection<T> collection) {
+        this(new HashSet<>());
+        for (T entity : collection) {
+            set.add(entity);
+        }
     }
 
     public int getSize(){
