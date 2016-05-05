@@ -154,9 +154,10 @@ public class CourseDao {
     public Collection<Course> getUserCourses(User user) {
         String sql = "SELECT course.id cid, course.name, course.description, course.status, " +
                 "users.id uid, users.first_name, users.last_name, users.email, users.password " +
-                "FROM course RIGHT JOIN student_course " +
-                    "ON course.id = student_course.course_id join users " +
-                        "ON course.teacher_id = users.id " +
+                "FROM course JOIN users " +
+                    "ON course.teacher_id = users.id " +
+                "LEFT JOIN student_course ON " +
+                "course.id = student_course.course_id " +
                 ((user instanceof Student) ? "WHERE student_id = (?)" : "WHERE teacher_id = (?)");
         Collection<Course> result = new HashSet<>();
         try (Connection connection = connectionPool.takeConnection();

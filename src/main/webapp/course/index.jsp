@@ -10,20 +10,28 @@
 <%--<h2>${pageContext.request.userPrincipal.name}</h2>--%>
 <%--${pageContext.request.isUserInRole(\"student\")}--%>
 <%--${requestScope.get(\"usersCourse\")}--%>
-<c:if test="${pageContext.request.isUserInRole(\"student\") && !requestScope.get(\"usersCourse\")}">
-    <form method="post" action="/course">
-        <input type="hidden" value="${course.id}" name="courseId">
-        <input type="hidden" value="${user.id}" name="studentId">
-        <input type="submit" value="Записаться">
-    </form>
-</c:if>
-<c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\")}">
-    <form method="post" action="/course/manage">
-        <input type="hidden" value="${course.id}" name="courseId">
-        <input type="hidden" value="delete" name="action">
-        <input type="submit" value="Удалить">
-    </form>
-</c:if>
+<table>
+    <tr>
+        <td>
+            <c:if test="${pageContext.request.isUserInRole(\"student\") && !requestScope.get(\"usersCourse\")}">
+                <form method="post" action="/course">
+                    <input type="hidden" value="${course.id}" name="courseId">
+                    <input type="hidden" value="${user.id}" name="studentId">
+                    <input type="submit" value="Записаться">
+                </form>
+            </c:if>
+        </td>
+        <td>
+            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\")}">
+                <form method="post" action="/course/manage">
+                    <input type="hidden" value="${course.id}" name="courseId">
+                    <input type="hidden" value="delete" name="action">
+                    <input type="submit" value="Удалить">
+                </form>
+            </c:if>
+        </td>
+    </tr>
+</table>
 <%=course.getName()%>
 <br/>
 <%=course.getDescription()%>
