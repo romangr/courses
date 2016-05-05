@@ -17,13 +17,13 @@
         <input type="submit" value="Записаться">
     </form>
 </c:if>
-<%--<c:if test="${pageContext.request.isUserInRole(\"teacher\")}">--%>
-    <%--<form method="" action="/course">--%>
-        <%--<input type="hidden" value="${course.id}" name="courseId">--%>
-        <%--<input type="hidden" value="${course.id}" name="studentId">--%>
-        <%--<input type="submit" value="Записаться">--%>
-    <%--</form>--%>
-<%--</c:if>--%>
+<c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\")}">
+    <form method="post" action="/course/manage">
+        <input type="hidden" value="${course.id}" name="courseId">
+        <input type="hidden" value="delete" name="action">
+        <input type="submit" value="Удалить">
+    </form>
+</c:if>
 <%=course.getName()%>
 <br/>
 <%=course.getDescription()%>
