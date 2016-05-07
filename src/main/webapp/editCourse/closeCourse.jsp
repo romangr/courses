@@ -1,0 +1,35 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Roman
+  Date: 07.05.2016
+  Time: 13:16
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://1243.ru/courses/tags" prefix="cst" %>
+<jsp:useBean id="studentsToGetMarkBean" type="taghandlers.JSPSetBean" scope="request"/>
+<html>
+<head>
+    <title>Закрытие курса</title>
+</head>
+<body>
+<%--<cst:jspclosecourse set="${studentsToGetMarkBean}"/>--%>
+${pageContext.request.getParameter("courseId")}
+<cst:jspclosecoursebody courseId="${pageContext.request.getParameter(\"courseId\")}" num="${studentsToGetMarkBean.size}">
+    <tr>
+        <td>${studentsToGetMarkBean.element}</td>
+        <td><input name="uid" type="hidden" value="${studentsToGetMarkBean.elementId}"></td>
+        <td>
+            <select name="mark">
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+            </select>
+        </td>
+        <td><textarea title="note" name="note"></textarea></td>
+    </tr>
+</cst:jspclosecoursebody>
+</body>
+</html>

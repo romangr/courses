@@ -20,6 +20,32 @@
         </attribute>
     </tag>
 
+    <tag>
+        <name>jspclosecourse</name>
+        <tag-class>taghandlers.CloseCourseTableTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>set</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>jspclosecoursebody</name>
+        <tag-class>taghandlers.CloseCourseTableBodyTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <name>num</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>courseId</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
     <!--<tag>-->
         <!--<name>bodyJspSet</name>-->
         <!--<tag-class>com.epam.courses.jf.jsp.JSPTagWithBody</tag-class>-->

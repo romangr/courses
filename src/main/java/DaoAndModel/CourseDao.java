@@ -16,6 +16,7 @@ public class CourseDao {
     private final ConnectionPool connectionPool;
 
     public Course create(Teacher teacher, String name, String description) {
+        //language=PostgreSQL
         String sql = "INSERT INTO course (teacher_id, name, description) VALUES (?,?,?)";
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement statement = getStatement(connection, sql)) {
@@ -33,6 +34,7 @@ public class CourseDao {
     }
 
     public void update(Course course) {
+        //language=PostgreSQL
         String sql = "UPDATE course SET name=(?), description=(?), status=(?) where id=(?)";
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement statement = getStatement(connection, sql)) {
@@ -47,6 +49,7 @@ public class CourseDao {
     }
 
     public void delete(Course course) {
+        //language=PostgreSQL
         String sql = "DELETE FROM course where id=(?)";
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement statement = getStatement(connection, sql)) {
@@ -185,13 +188,38 @@ public class CourseDao {
     }
 
     public boolean addCourseToStudent(Course course, Student student) {
+        //language=PostgreSQL
         String sql = "INSERT INTO student_course (student_id, course_id) VALUES (?, ?)";
         return updateStudentCourses(course, student, sql);
     }
 
     public boolean deleteCourseFromStudent(Course course, Student student) {
+        //language=PostgreSQL
         String sql = "DELETE FROM student_course WHERE student_id = (?) AND course_id = (?)";
         return updateStudentCourses(course, student, sql);
+    }
+
+    public void setStudentsMarkAndNote(Course course, Student student, int mark, String note) {
+        //language=PostgreSQL
+        String sql = "UPDATE student_course " +
+                "SET mark=" + mark + ", note='"+ note + "' "+
+                "WHERE course_id = " + course.getId() + " AND student_id = " + student.getId();
+        try (Connection connection = connectionPool.takeConnection();
+             Statement statement = connection.createStatement()) {
+            statement.executeUpdate(sql);
+            ResultSet rs = statement.executeQuery(
+                    "SELECT (count(mark) - count(*)) null_marks " +
+                            "FROM student_course " +
+                            "WHERE course_id = " + course.getId());
+            if (rs.next()) {
+                if (rs.getInt("null_marks") == 0) {
+                    statement.executeUpdate("UPDATE course SET status=2 WHERE id = " + course.getId());
+                }
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean updateStudentCourses(Course course, Student student, String sql) {

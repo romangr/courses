@@ -2,6 +2,7 @@ package servlets;
 
 import DaoAndModel.*;
 import listeners.DaoProvider;
+import taghandlers.JSPSetBean;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,9 +10,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Optional;
 
+import static java.lang.Integer.*;
 import static java.lang.Integer.parseInt;
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -33,28 +38,42 @@ public class CourseManageServlet extends HttpServlet {
         if (action.isPresent()) {
             Optional<String> courseId = ofNullable(req.getParameter("courseId"));
             if (courseId.isPresent()) {
-                switch (action.get()) {
-                    case "delete":
-                        courseDao.getById(parseInt(courseId.get()))
-                                .ifPresent(courseDao::delete);
-                        break;
-                    case "closeRegistration":
-                        courseDao.getById(parseInt(courseId.get()))
-                                .ifPresent(course -> {
-                                    course.setStatus(1);
-                                    courseDao.update(course);
-                                });
-                        break;
-                    case "editCourse":
-                        courseDao.getById(parseInt(courseId.get()))
-                                .ifPresent(course -> {
-                                    ofNullable(req.getParameter("courseName")).ifPresent(course::setName);
-                                    ofNullable(req.getParameter("courseDescription")).ifPresent(course::setDescription);
-                                    courseDao.update(course);
-                                });
-                        break;
+                Optional<Course> courseOptional = courseDao.getById(parseInt(courseId.get()));
+                if (courseOptional.isPresent()) {
+                    Course course = courseOptional.get();
+                    switch (action.get()) {
+                        case "delete":
+                            courseDao.delete(course);
+                            break;
+                        case "closeRegistration":
+                            course.setStatus(1);
+                            courseDao.update(course);
+                            break;
+                        case "editCourse":
+                            ofNullable(req.getParameter("courseName")).ifPresent(course::setName);
+                            ofNullable(req.getParameter("courseDescription")).ifPresent(course::setDescription);
+                            courseDao.update(course);
+                            break;
+                        case "closeCourse":
+                            String[] uids = req.getParameterValues("uid");
+                            String[] marks = req.getParameterValues("mark");
+                            String[] notes = req.getParameterValues("note");
+                            System.out.println(uids.length + " " + marks.length + " " + notes.length);
+                            UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+
+                            if (uids.length == marks.length && uids.length == notes.length) {
+                                for (int i = 0; i < uids.length; i++) {
+                                    Optional<User> studentOptional = userDao.getById(parseInt(uids[i]));
+                                    if (studentOptional.isPresent()) {
+                                        courseDao.setStudentsMarkAndNote(course, (Student) studentOptional.get(),
+                                                parseInt(marks[i]), notes[i]);
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                    resp.sendRedirect("/");
                 }
-                resp.sendRedirect("/");
             } else {
                 switch (action.get()) {
                     case "createCourse":

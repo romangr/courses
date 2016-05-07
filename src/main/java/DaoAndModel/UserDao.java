@@ -3,10 +3,7 @@ package DaoAndModel;
 import javase10.t02.cp.ConnectionPool;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Roman 25.04.2016.
@@ -183,6 +180,32 @@ public class UserDao {
             e.printStackTrace();
         }
         return Optional.ofNullable(result);
+    }
+
+    public Collection<Student> getStudentsOnCourse(Course course, boolean withoutMark) {
+        String sql = "SELECT users.id uid, users.first_name, users.last_name, users.email, users.password " +
+                "FROM student_course join users " +
+                    "ON student_course.student_id = users.id " +
+                "WHERE course_id = (?)" + ((withoutMark) ? " AND student_course.mark IS NULL" : "");
+        Collection<Student> result = new HashSet<>();
+        try (Connection connection = connectionPool.takeConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, course.getId());
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                result.add(new Student(
+                        rs.getInt("uid"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                ));
+            }
+            rs.close();
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     UserDao(ConnectionPool connectionPool) {

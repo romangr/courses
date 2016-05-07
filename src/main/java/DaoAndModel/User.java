@@ -3,7 +3,7 @@ package DaoAndModel;
 /**
  * Roman 15.04.2016.
  */
-public class User {
+public class User implements Model {
     private final int id;
     private String firstName;
     private String lastName;
@@ -71,5 +71,10 @@ public class User {
         int result = id;
         result = 31 * result + email.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
     }
 }

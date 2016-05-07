@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @AllArgsConstructor
-public class Course {
+public class Course implements Model {
 
     private final int id;
     private final Teacher teacher;

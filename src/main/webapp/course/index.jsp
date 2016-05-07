@@ -46,6 +46,12 @@
                     <input type="submit" value="Закрыть регистрацию">
                 </form>
             </c:if>
+            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\") && (course.status == 1)}">
+                <form method="post" action="/closeCourse">
+                    <input type="hidden" value="${course.id}" name="courseId">
+                    <input type="submit" value="Закрыть курс">
+                </form>
+            </c:if>
         </td>
         <td>
             <c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\")}">
