@@ -1,6 +1,8 @@
 package DaoAndModel;
 
+import exceptions.SameEmailRegistrationException;
 import javase10.t02.cp.ConnectionPool;
+import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 import java.util.*;
@@ -13,12 +15,12 @@ public class UserDao {
     private final ConnectionPool connectionPool;
 
     public Student createStudent(String firstName, String lastName,
-                                 String email, String password) {
+                                 String email, String password) throws SameEmailRegistrationException {
         return (Student) createUser(firstName, lastName, email, password, 0);
     }
 
     public Teacher createTeacher(String firstName, String lastName,
-                                 String email, String password) {
+                                 String email, String password) throws SameEmailRegistrationException {
         return (Teacher) createUser(firstName, lastName, email, password, 1);
     }
 
@@ -37,7 +39,9 @@ public class UserDao {
     }
 
     public void delete(User user) {
-        String sql = "DELETE FROM users where id=(?)";
+        //language=PostgreSQL
+        String sql = "DELETE FROM users where id=(?);" +
+                "DELETE FROM user_roles WHERE email = '" + user.getEmail() + "'";
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement statement = getStatement(connection, sql)) {
             statement.setInt(1, user.getId());
@@ -122,10 +126,11 @@ public class UserDao {
     }
 
     private User createUser(String firstName, String lastName,
-                            String email, String password, int type) {
+                            String email, String password, int type) throws SameEmailRegistrationException {
         String sql = "INSERT INTO users (first_name, last_name, email, password, type) VALUES (?,?,?,?,?)";
         try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement statement = getStatement(connection, sql)) {
+             PreparedStatement statement = getStatement(connection, sql);
+            Statement roleSetStatement = connection.createStatement()) {
             statement.setString(1, firstName);
             statement.setString(2, lastName);
             statement.setString(3, email);
@@ -135,6 +140,12 @@ public class UserDao {
             ResultSet generatedKeys = statement.getGeneratedKeys();
             generatedKeys.next();
             int id = (int) generatedKeys.getLong(1);
+            if (type == 0) {
+                roleSetStatement.executeUpdate("INSERT INTO user_roles (email, role_name) VALUES ('" + email + "', 'student')");
+            } else {
+                roleSetStatement.executeUpdate("INSERT INTO user_roles (email, role_name) VALUES ('" + email + "', 'teacher')");
+            }
+            generatedKeys.close();
             switch (type) {
                 case 0:
                     return new Student(id, firstName, lastName, email, password);
@@ -142,6 +153,12 @@ public class UserDao {
                     return new Teacher(id, firstName, lastName, email, password);
                 default:
                     throw new RuntimeException("Type must be 0 or 1");
+            }
+        } catch (PSQLException e) {
+            if (e.getSQLState().equals("23505")) {
+                throw new SameEmailRegistrationException(e);
+            } else {
+                throw new RuntimeException(e);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -185,7 +202,7 @@ public class UserDao {
     public Collection<Student> getStudentsOnCourse(Course course, boolean withoutMark) {
         String sql = "SELECT users.id uid, users.first_name, users.last_name, users.email, users.password " +
                 "FROM student_course join users " +
-                    "ON student_course.student_id = users.id " +
+                "ON student_course.student_id = users.id " +
                 "WHERE course_id = (?)" + ((withoutMark) ? " AND student_course.mark IS NULL" : "");
         Collection<Student> result = new HashSet<>();
         try (Connection connection = connectionPool.takeConnection();

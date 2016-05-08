@@ -1,6 +1,8 @@
 package DaoAndModel;
 
+import exceptions.SameEmailRegistrationException;
 import org.junit.Test;
+import org.postgresql.util.PSQLException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -22,8 +24,16 @@ public class UserDaoTest {
     }
 
     @Test
-    public void createTeacher() throws Exception {
-
+    public void sameEmailRegistration() throws Exception {
+        Student student1 = userDao.createStudent("fname", "lname", "email@example.com", "qwerty");
+        boolean flag = false;
+        try {
+            Student student2 = userDao.createStudent("fname2", "lname2", "email@example.com", "qwerty");
+        } catch (SameEmailRegistrationException e) {
+            flag = true;
+        }
+        userDao.delete(student1);
+        assertThat(flag, is(true));
     }
 
     @Test

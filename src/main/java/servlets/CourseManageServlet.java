@@ -58,7 +58,6 @@ public class CourseManageServlet extends HttpServlet {
                             String[] uids = req.getParameterValues("uid");
                             String[] marks = req.getParameterValues("mark");
                             String[] notes = req.getParameterValues("note");
-                            System.out.println(uids.length + " " + marks.length + " " + notes.length);
                             UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
                             if (uids.length == marks.length && uids.length == notes.length) {
