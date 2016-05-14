@@ -5,6 +5,8 @@ import listeners.DaoProvider;
 import taghandlers.JSPSetBean;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.HttpConstraint;
+import javax.servlet.annotation.ServletSecurity;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,7 @@ import static java.util.Optional.ofNullable;
  * Roman 05.05.2016.
  */
 @WebServlet("/course/manage")
+@ServletSecurity(@HttpConstraint(rolesAllowed = "teacher"))
 public class CourseManageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

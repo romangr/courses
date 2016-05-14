@@ -4,11 +4,13 @@ import DaoAndModel.*;
 import listeners.DaoProvider;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.HttpConstraint;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -32,18 +34,25 @@ public class CourseServlet extends HttpServlet {
             Course course = courseOptional.get();
             req.setAttribute("course", course);
 
+            Optional<Principal> userOptional = ofNullable(req.getUserPrincipal());
+            System.out.println(userOptional);
+            if (userOptional.isPresent()) {
             userDao.getUserByEmail(req.getUserPrincipal().getName())
                     .ifPresent(user -> {
                         req.setAttribute("user", user);
                         Collection<Course> userCourses = courseDao.getUserCourses(user);
                         System.out.println("userCourses size = " + userCourses.size());
                         if (userCourses.contains(course)) {
+                            System.out.println("usersCourse");
                             req.setAttribute("usersCourse", true);
                         } else {
+                            System.out.println("!usersCourse");
                             req.setAttribute("usersCourse", false);
                         }
                     });
-
+            } else {
+                req.setAttribute("usersCourse", false);
+            }
             getServletContext().getRequestDispatcher("/course/index.jsp").forward(req, resp);
         } else {
             resp.sendRedirect("/");
@@ -52,14 +61,15 @@ public class CourseServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //doGet(req, resp);
         CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
         UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
         ofNullable(req.getParameter("courseId"))
                 .ifPresent(courseId -> {
-                    ofNullable(req.getParameter("studentId")).ifPresent(studentId -> {
-                        userDao.getById(parseInt(studentId))
+                    Optional<String> userNameOptional = ofNullable(req.getUserPrincipal()).map(Principal::getName);
+
+                    if (userNameOptional.isPresent()) {
+                        userDao.getUserByEmail(userNameOptional.get())
                                 .ifPresent((user -> {
                                     Optional<Course> courseOptional = courseDao.getById(parseInt(courseId));
                                     try {
@@ -78,7 +88,7 @@ public class CourseServlet extends HttpServlet {
                                         throw new RuntimeException(e);
                                     }
                                 }));
-                    });
+                    };
                 });
     }
 }

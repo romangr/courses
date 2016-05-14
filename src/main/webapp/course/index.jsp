@@ -2,8 +2,16 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="course" type="DaoAndModel.Course" scope="request"/>
-<jsp:useBean id="user" type="DaoAndModel.User" scope="request"/>
-<jsp:useBean id="userCourse" type="java.lang.Boolean" scope="request"/>
+<c:if test="${requestScope.user != null}">
+    <jsp:useBean id="user" type="DaoAndModel.User" scope="request"/>
+</c:if>
+<jsp:useBean id="usersCourse" type="java.lang.Boolean" scope="request"/>
+<%--<c:if test="${requestScope.userCourse != null}">
+    <jsp:useBean id="userCourse" type="java.lang.Boolean" scope="request"/>
+</c:if>
+<c:if test="${requestScope.userCourse == null}">
+    <jsp:useBean id="userCourse" type="java.lang.Boolean" scope="request"/>
+</c:if>--%>
 
 <fmt:setLocale value="${sessionScope.local}"/>
 <fmt:setBundle basename="locale" var="local"/>
@@ -28,14 +36,15 @@
 <table>
     <tr>
         <td>
-            <c:if test="${pageContext.request.isUserInRole(\"student\") && !requestScope.get(\"usersCourse\") && (course.status == 0)}">
+            <%--pageContext.request.isUserInRole(\"student\") &&--%>
+            <c:if test="${!usersCourse && (course.status == 0)}">
                 <form method="post" action="/course">
                     <input type="hidden" value="${course.id}" name="courseId">
                     <input type="hidden" value="${user.id}" name="studentId">
                     <input type="submit" value="${subscribe}">
                 </form>
             </c:if>
-            <c:if test="${pageContext.request.isUserInRole(\"student\") && requestScope.get(\"usersCourse\")}">
+            <c:if test="${pageContext.request.isUserInRole(\"student\") && usersCourse}">
                 <form method="post" action="/course">
                     <input type="hidden" value="${course.id}" name="courseId">
                     <input type="hidden" value="${user.id}" name="studentId">
@@ -45,7 +54,7 @@
             </c:if>
         </td>
         <td>
-            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\") && (course.status == 0)}">
+            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && usersCourse && (course.status == 0)}">
                 <form method="get" action="/editCourse">
                     <input type="hidden" value="${course.id}" name="id">
                     <input type="submit" value="${editCourse}">
@@ -53,14 +62,14 @@
             </c:if>
         </td>
         <td>
-            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\") && (course.status == 0)}">
+            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && usersCourse && (course.status == 0)}">
                 <form method="post" action="/course/manage">
                     <input type="hidden" value="${course.id}" name="courseId">
                     <input type="hidden" value="closeRegistration" name="action">
                     <input type="submit" value="${closeRegistration}">
                 </form>
             </c:if>
-            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\") && (course.status == 1)}">
+            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && usersCourse && (course.status == 1)}">
                 <form method="post" action="/closeCourse">
                     <input type="hidden" value="${course.id}" name="courseId">
                     <input type="submit" value="${closeCourse}">
@@ -68,7 +77,7 @@
             </c:if>
         </td>
         <td>
-            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && requestScope.get(\"usersCourse\")}">
+            <c:if test="${pageContext.request.isUserInRole(\"teacher\") && usersCourse}">
                 <form method="post" action="/course/manage">
                     <input type="hidden" value="${course.id}" name="courseId">
                     <input type="hidden" value="delete" name="action">

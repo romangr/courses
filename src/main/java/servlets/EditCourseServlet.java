@@ -6,6 +6,8 @@ import DaoAndModel.UserDao;
 import listeners.DaoProvider;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.HttpConstraint;
+import javax.servlet.annotation.ServletSecurity;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +23,7 @@ import static java.util.Optional.ofNullable;
  * Roman 05.05.2016.
  */
 @WebServlet("/editCourse")
+@ServletSecurity(@HttpConstraint(rolesAllowed = "teacher"))
 public class EditCourseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
