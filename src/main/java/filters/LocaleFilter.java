@@ -21,15 +21,15 @@ public class LocaleFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         Optional<String> localeOptional = ofNullable(request.getParameter("locale"));
+        Optional<Locale> local = ofNullable((Locale) request.getSession().getAttribute("local"));
 
-        if (localeOptional.isPresent()) {
-            request.getSession(true).setAttribute("local", localeOptional.get());
-        } else {
-            request.getSession().setAttribute("local", Locale.forLanguageTag("ru"));
+        if (!local.isPresent()) {
+            if (localeOptional.isPresent()) {
+                request.getSession(true).setAttribute("local", Locale.forLanguageTag(localeOptional.get()));
+            } else {
+                request.getSession().setAttribute("local", Locale.forLanguageTag("ru"));
+            }
         }
-
-        //request.getSession(true).setAttribute("local", Locale.ENGLISH);
-
         System.out.println(request.getSession().getAttribute("local"));
         /*request.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));
         response.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));*/

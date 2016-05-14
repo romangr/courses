@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://1243.ru/courses/tags" prefix="cst" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="studentsToGetMarkBean" type="taghandlers.JSPSetBean" scope="request"/>
 
 <fmt:setLocale value="${sessionScope.local}"/>
@@ -19,9 +20,8 @@
     <title>${title}</title>
 </head>
 <body>
-<%--<cst:jspclosecourse set="${studentsToGetMarkBean}"/>--%>
-${pageContext.request.getParameter("courseId")}
-<cst:jspclosecoursebody courseId="${pageContext.request.getParameter(\"courseId\")}" num="${studentsToGetMarkBean.size}">
+<cst:jspclosecoursebody courseId="${pageContext.request.getParameter(\"courseId\")}" num="${studentsToGetMarkBean.size}"
+                        locale="${sessionScope.local}">
     <tr>
         <td>${studentsToGetMarkBean.element}</td>
         <td><input name="uid" type="hidden" value="${studentsToGetMarkBean.elementId}"></td>

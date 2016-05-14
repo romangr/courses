@@ -6,12 +6,12 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class JSPSetBean<T extends Model> implements Iterable<T>{
+public class JSPSetBean<T extends Model> implements Iterable<T> {
     private Iterator<T> it;
     private Set<T> set;
     private T currentElement;
 
-    public JSPSetBean(Set<T> set){
+    public JSPSetBean(Set<T> set) {
         this.set = set;
     }
 
@@ -22,7 +22,7 @@ public class JSPSetBean<T extends Model> implements Iterable<T>{
         }
     }
 
-    public int getSize(){
+    public int getSize() {
         return set.size();
     }
 
@@ -33,6 +33,7 @@ public class JSPSetBean<T extends Model> implements Iterable<T>{
 
     @Deprecated
     public T getElement() {
+        if (set.size() == 0) return null;
         if (it == null || !it.hasNext())
             it = set.iterator();
 
@@ -41,7 +42,9 @@ public class JSPSetBean<T extends Model> implements Iterable<T>{
 
     @Deprecated
     public int getElementId() {
-        return currentElement.getId();
+        return (currentElement != null)
+                ? currentElement.getId()
+                : 0;
     }
 
     public Stream<T> elements() {

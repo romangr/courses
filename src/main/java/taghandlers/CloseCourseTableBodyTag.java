@@ -6,6 +6,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Roman 07.05.2016.
@@ -14,7 +16,12 @@ public class CloseCourseTableBodyTag extends BodyTagSupport {
 
     private int num;
     private int courseId;
+    private Locale locale;
+    private ResourceBundle localeStrings;
 
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
     public void setNum(int num) {
         this.num = num;
     }
@@ -24,10 +31,16 @@ public class CloseCourseTableBodyTag extends BodyTagSupport {
 
     @Override
     public int doStartTag() throws JspException {
+        localeStrings = ResourceBundle.getBundle("locale", ((locale != null) ? locale : Locale.forLanguageTag("ru")));
         try {
             pageContext.getOut().write(
                     "<form method=\"post\" action=\"/course/manage\"><table style=\"border: 3px solid #000; width: 100%\">");
-            return EVAL_BODY_INCLUDE;
+            if (num > 0) {
+                return EVAL_BODY_INCLUDE;
+            } else {
+                pageContext.getOut().write(localeStrings.getString("closeCourse.noStudents"));
+                return SKIP_BODY;
+            }
         } catch (IOException e) {
             throw new JspTagException(e);
         }
@@ -41,9 +54,10 @@ public class CloseCourseTableBodyTag extends BodyTagSupport {
 
     @Override
     public int doEndTag() throws JspException {
+        String submit = localeStrings.getString("closeCourse.submit");
         try {
             pageContext.getOut().write("<tr>" +
-                    "<td> <input type=\"submit\" value=\"Сохранить\"/>" +
+                    "<td> <input type=\"submit\" value=\""+ submit +"\"/>" +
                     "<input type=\"hidden\" value=\"closeCourse\" name=\"action\">" +
                     "<input type=\"hidden\" value=\"" + courseId + "\" name=\"courseId\"> </td>" +
                     "</tr></table></form>");
