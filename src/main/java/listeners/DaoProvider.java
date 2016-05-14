@@ -1,6 +1,8 @@
 package listeners;
 
 import DaoAndModel.DaoCreator;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -19,13 +21,17 @@ public class DaoProvider implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-
         final ServletContext servletContext = sce.getServletContext();
         daoCreator = new DaoCreator("org.postgresql.Driver",
                 "jdbc:postgresql://localhost/Courses", "postgres", "Axe2013", 5);
 
         servletContext.setAttribute(USER_DAO, daoCreator.newUserDao());
         servletContext.setAttribute(COURSE_DAO, daoCreator.newCourseDao());
+
+        BasicConfigurator.configure();
+        Logger logger = Logger.getLogger(DaoProvider.class.getName());
+        logger.info("Context initialized");
+        servletContext.setAttribute("logger", logger);
     }
 
     @Override

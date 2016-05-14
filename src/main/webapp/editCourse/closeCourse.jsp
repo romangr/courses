@@ -7,10 +7,16 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://1243.ru/courses/tags" prefix="cst" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="studentsToGetMarkBean" type="taghandlers.JSPSetBean" scope="request"/>
+
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="locale" var="local"/>
+<fmt:message bundle="${local}" key="closeCourse.title" var="title"/>
+
 <html>
 <head>
-    <title>Закрытие курса</title>
+    <title>${title}</title>
 </head>
 <body>
 <%--<cst:jspclosecourse set="${studentsToGetMarkBean}"/>--%>
