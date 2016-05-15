@@ -1,18 +1,14 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page errorPage="/error.jsp" %>
 <jsp:useBean id="course" type="DaoAndModel.Course" scope="request"/>
 <c:if test="${requestScope.user != null}">
     <jsp:useBean id="user" type="DaoAndModel.User" scope="request"/>
 </c:if>
 <jsp:useBean id="usersCourse" type="java.lang.Boolean" scope="request"/>
-<%--<c:if test="${requestScope.userCourse != null}">
-    <jsp:useBean id="userCourse" type="java.lang.Boolean" scope="request"/>
-</c:if>
-<c:if test="${requestScope.userCourse == null}">
-    <jsp:useBean id="userCourse" type="java.lang.Boolean" scope="request"/>
-</c:if>--%>
 
+<%--locale setting--%>
 <fmt:setLocale value="${sessionScope.local}"/>
 <fmt:setBundle basename="locale" var="local"/>
 <fmt:message bundle="${local}" key="course.title" var="title"/>
