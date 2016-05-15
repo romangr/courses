@@ -3,6 +3,9 @@ package listeners;
 import DaoAndModel.DaoCreator;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.helpers.AppenderAttachableImpl;
+import org.apache.log4j.pattern.PropertiesPatternConverter;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -18,24 +21,27 @@ public class DaoProvider implements ServletContextListener {
     public static final String USER_DAO = "userDao";
     public static final String COURSE_DAO = "courseDao";
     private DaoCreator daoCreator;
+    private static final Logger LOGGER = Logger.getLogger(DaoProvider.class.getName());
+    //private static final Logger LOGGER = Logger.getLogger("rootLogger");
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         final ServletContext servletContext = sce.getServletContext();
         daoCreator = new DaoCreator("org.postgresql.Driver",
-                "jdbc:postgresql://localhost/Courses", "postgres", "Axe2013", 5);
+                "jdbc:postgresql://localhost/Courses", "coursesproject", "1", 5);
 
         servletContext.setAttribute(USER_DAO, daoCreator.newUserDao());
         servletContext.setAttribute(COURSE_DAO, daoCreator.newCourseDao());
 
-        BasicConfigurator.configure();
-        Logger logger = Logger.getLogger(DaoProvider.class.getName());
-        logger.info("Context initialized");
-        servletContext.setAttribute("logger", logger);
+        PropertyConfigurator.configure(sce.getServletContext().getRealPath("/WEB-INF/classes/log4j.properties"));
+
+        LOGGER.info("Context initialized");
+        //servletContext.setAttribute("logger", logger);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         daoCreator.closeConnectionPool();
+        LOGGER.info("Context destroyed");
     }
 }

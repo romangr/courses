@@ -13,7 +13,7 @@
     </appender>
 
     <logger name="log4j.rootLogger" additivity="false">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
         <appender-ref ref="FILE"/>
     </logger>
 

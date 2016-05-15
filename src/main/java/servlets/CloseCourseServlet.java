@@ -4,6 +4,7 @@ import DaoAndModel.CourseDao;
 import DaoAndModel.Student;
 import DaoAndModel.UserDao;
 import listeners.DaoProvider;
+import org.apache.log4j.Logger;
 import taghandlers.JSPSetBean;
 
 import javax.servlet.ServletException;
@@ -25,10 +26,8 @@ import static java.util.Optional.ofNullable;
 @WebServlet("/closeCourse")
 @ServletSecurity(@HttpConstraint(rolesAllowed = "teacher"))
 public class CloseCourseServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
-    }
+
+    private static final Logger LOGGER = Logger.getLogger(CloseCourseServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,6 +46,7 @@ public class CloseCourseServlet extends HttpServlet {
                             getServletContext().getRequestDispatcher("/editCourse/closeCourse.jsp")
                                     .forward(req, resp);
                         } catch (ServletException | IOException e) {
+                            LOGGER.error("Forwarding error");
                             throw new RuntimeException(e);
                         }
                     });

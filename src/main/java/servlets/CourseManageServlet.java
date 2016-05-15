@@ -2,6 +2,7 @@ package servlets;
 
 import DaoAndModel.*;
 import listeners.DaoProvider;
+import org.apache.log4j.Logger;
 import taghandlers.JSPSetBean;
 
 import javax.servlet.ServletException;
@@ -27,10 +28,8 @@ import static java.util.Optional.ofNullable;
 @WebServlet("/course/manage")
 @ServletSecurity(@HttpConstraint(rolesAllowed = "teacher"))
 public class CourseManageServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/error.html");
-    }
+
+    private static final Logger LOGGER = Logger.getLogger(CourseManageServlet.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,15 +46,18 @@ public class CourseManageServlet extends HttpServlet {
                     switch (action.get()) {
                         case "delete":
                             courseDao.delete(course);
+                            LOGGER.info("Course deleted " + course.getName());
                             break;
                         case "closeRegistration":
                             course.setStatus(1);
                             courseDao.update(course);
+                            LOGGER.info("Registration closed on course " + course.getName());
                             break;
                         case "editCourse":
                             ofNullable(req.getParameter("courseName")).ifPresent(course::setName);
                             ofNullable(req.getParameter("courseDescription")).ifPresent(course::setDescription);
                             courseDao.update(course);
+                            LOGGER.info("Course has been edited " + course.getName());
                             break;
                         case "closeCourse":
                             String[] uids = req.getParameterValues("uid");
@@ -69,17 +71,20 @@ public class CourseManageServlet extends HttpServlet {
                                     if (studentOptional.isPresent()) {
                                         courseDao.setStudentsMarkAndNote(course, (Student) studentOptional.get(),
                                                 parseInt(marks[i]), notes[i]);
+                                                LOGGER.info("Closing course " + course.getName());
                                     }
                                 }
                             }
                             break;
+                        default:
+                            LOGGER.warn("Unknown action!");
                     }
                     resp.sendRedirect("/");
                 }
             } else {
                 switch (action.get()) {
                     case "createCourse":
-                        System.out.println("creating course");
+                        LOGGER.trace("creating course");
                         UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
                         Optional<User> userOptional = userDao.getUserByEmail(req.getUserPrincipal().getName());
                         if (userOptional.isPresent()) {
@@ -92,12 +97,15 @@ public class CourseManageServlet extends HttpServlet {
                                         courseNameOptional.get(),
                                         courseDescriptionOptional.get()
                                 );
+                                LOGGER.info("Course created " + newCourse.getName());
                                 resp.sendRedirect("/course?id=" + newCourse.getId());
                             }
                         }
                         break;
                 }
             }
+        } else {
+            LOGGER.error("No action in request!");
         }
     }
 }

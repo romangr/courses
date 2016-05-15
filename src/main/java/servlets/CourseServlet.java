@@ -2,6 +2,7 @@ package servlets;
 
 import DaoAndModel.*;
 import listeners.DaoProvider;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.HttpConstraint;
@@ -22,6 +23,9 @@ import static java.util.Optional.ofNullable;
  */
 @WebServlet("/course")
 public class CourseServlet extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(CourseServlet.class.getName());
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
@@ -35,18 +39,18 @@ public class CourseServlet extends HttpServlet {
             req.setAttribute("course", course);
 
             Optional<Principal> userOptional = ofNullable(req.getUserPrincipal());
-            System.out.println(userOptional);
+            LOGGER.trace(userOptional);
             if (userOptional.isPresent()) {
             userDao.getUserByEmail(req.getUserPrincipal().getName())
                     .ifPresent(user -> {
                         req.setAttribute("user", user);
                         Collection<Course> userCourses = courseDao.getUserCourses(user);
-                        System.out.println("userCourses size = " + userCourses.size());
+                        LOGGER.trace("userCourses size = " + userCourses.size());
                         if (userCourses.contains(course)) {
-                            System.out.println("usersCourse");
+                            LOGGER.trace("usersCourse");
                             req.setAttribute("usersCourse", true);
                         } else {
-                            System.out.println("!usersCourse");
+                            LOGGER.trace("!usersCourse");
                             req.setAttribute("usersCourse", false);
                         }
                     });
@@ -85,6 +89,7 @@ public class CourseServlet extends HttpServlet {
                                             resp.sendRedirect("/error.html");
                                         }
                                     } catch (IOException e) {
+                                        LOGGER.error("Redirecting error");
                                         throw new RuntimeException(e);
                                     }
                                 }));

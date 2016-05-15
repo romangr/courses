@@ -5,6 +5,7 @@ import DaoAndModel.CourseDao;
 import DaoAndModel.User;
 import DaoAndModel.UserDao;
 import listeners.DaoProvider;
+import org.apache.log4j.Logger;
 import taghandlers.JSPSetBean;
 
 import javax.servlet.ServletException;
@@ -25,6 +26,9 @@ import static java.util.Optional.ofNullable;
  */
 @WebServlet("/my")
 public class MyCoursesServlet extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(MyCoursesServlet.class.getName());
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
@@ -35,14 +39,14 @@ public class MyCoursesServlet extends HttpServlet {
                 .flatMap(userDao::getUserByEmail);
 
         if (userOptional.isPresent()) {
-            System.out.println("userOptional is present");
-            System.out.println(userOptional.get().getEmail());
+            LOGGER.trace("userOptional is present");
+            LOGGER.trace(userOptional.get().getEmail());
             Collection<Course> userCourses = courseDao.getUserCourses(userOptional.get());
             JSPSetBean<Course> jspSetBean  = new JSPSetBean<>(userCourses);
             req.setAttribute("myCoursesBean", jspSetBean);
             getServletContext().getRequestDispatcher("/my/index.jsp").forward(req, resp);
         } else {
-            System.out.println("userOptional is not present");
+            LOGGER.trace("userOptional is not present");
             resp.sendRedirect("/");
         }
     }

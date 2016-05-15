@@ -4,6 +4,7 @@ import DaoAndModel.CourseDao;
 import DaoAndModel.UserDao;
 import exceptions.SameEmailRegistrationException;
 import listeners.DaoProvider;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,9 +22,13 @@ import static java.util.Optional.ofNullable;
  */
 @WebServlet("/signUp")
 public class SignUpServlet extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(SignUpServlet.class.getName());
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        resp.sendRedirect("/error.jsp");
+        LOGGER.warn("Method GET is not allowed here");
     }
 
     @Override
@@ -38,24 +43,24 @@ public class SignUpServlet extends HttpServlet {
 
         if (firstNameOptional.isPresent() && lastNameOptional.isPresent()
                 && emailOptional.isPresent() && passwordOptional.isPresent() && passwordConfirmOptional.isPresent()) {
-            System.out.println("All params are got");
+            LOGGER.trace("All params are got");
             if (firstNameOptional.get().length() > 30 || lastNameOptional.get().length() > 30) {
-                System.out.println("name length");
+                LOGGER.trace("name length");
                 giveAnotherTryWithMessage(req, resp, "Max names length is 30");
                 return;
             }
             if (emailOptional.get().length() < 5) {
-                System.out.println("email length");
+                LOGGER.trace("email length");
                 giveAnotherTryWithMessage(req, resp, "Email error");
                 return;
             }
             if (!passwordOptional.get().equals(passwordConfirmOptional.get())) {
-                System.out.println("passwords check");
+                LOGGER.trace("passwords check");
                 giveAnotherTryWithMessage(req, resp, "Passwords are not equal");
                 return;
             }
             try {
-                System.out.println("Creating user");
+                LOGGER.trace("Creating user");
                 Optional<Boolean> isTeacherOptional = ofNullable(req.getParameter("isTeacher")).map(s -> s.equals("on"));
                 if (isTeacherOptional.isPresent() && isTeacherOptional.get()) {
                     userDao.createTeacher(firstNameOptional.get(), lastNameOptional.get(), emailOptional.get(),

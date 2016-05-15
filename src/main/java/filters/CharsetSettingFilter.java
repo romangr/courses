@@ -1,5 +1,8 @@
 package filters;
 
+import listeners.DaoProvider;
+import org.apache.log4j.Logger;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebFilter;
@@ -13,9 +16,12 @@ import java.io.IOException;
  */
 @WebFilter("/*")
 public class CharsetSettingFilter extends HttpFilter {
+
+    private static final Logger LOGGER = Logger.getLogger(CharsetSettingFilter.class.getName());
+
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        System.out.println("Charset is set");
+        LOGGER.trace("Charset is set");
         request.setCharacterEncoding("UTF-8");
         chain.doFilter(request, response);
     }

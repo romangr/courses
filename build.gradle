@@ -15,7 +15,6 @@ dependencies {
     providedCompile 'org.apache.tomcat:tomcat-api:+'
     providedCompile 'org.apache.tomcat:tomcat-jsp-api:+'
 
-    compile 'com.h2database:h2:+'
     providedCompile 'org.postgresql:postgresql:9.4-1203-jdbc4'
 
     // JSTL
@@ -24,8 +23,10 @@ dependencies {
 
     compile 'org.projectlombok:lombok:+'
 
-    compile 'ch.qos.logback:logback-classic:+'
+    // logging
     compile 'log4j:log4j:1.2.17'
 
+    // testing tools
     testCompile 'junit:junit:+'
+    testCompile 'com.h2database:h2:+'
 }

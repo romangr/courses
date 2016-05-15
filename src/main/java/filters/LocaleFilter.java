@@ -1,5 +1,8 @@
 package filters;
 
+import listeners.DaoProvider;
+import org.apache.log4j.Logger;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebFilter;
@@ -18,6 +21,9 @@ import static java.util.Optional.ofNullable;
  */
 @WebFilter("/*")
 public class LocaleFilter extends HttpFilter {
+
+    private static final Logger LOGGER = Logger.getLogger(LocaleFilter.class.getName());
+
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         Optional<String> localeOptional = ofNullable(request.getParameter("locale"));
@@ -30,7 +36,7 @@ public class LocaleFilter extends HttpFilter {
                 request.getSession().setAttribute("local", Locale.forLanguageTag("ru"));
             }
         }
-        System.out.println(request.getSession().getAttribute("local"));
+        LOGGER.trace(request.getSession().getAttribute("local"));
         /*request.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));
         response.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));*/
         chain.doFilter(request, response);
