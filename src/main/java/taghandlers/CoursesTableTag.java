@@ -23,10 +23,6 @@ public class CoursesTableTag extends TagSupport {
     public int doStartTag() throws JspException {
         try {
             JspWriter out = pageContext.getOut();
-           /* pageContext.getOut().write("Size = <b>(" + set.getSize() + ")</b>"
-                    + "<table style=\"border: 1px solid #000;\"><tr><td>"
-                    + set.elements().collect(Collectors.joining("</td></tr><tr><td>"))
-                    + "</td></tr></table>");*/
             out.write("<table style=\"border: 1px solid #000;\">");
             Iterator<Course> iterator = set.getIterator();
             while (iterator.hasNext()){

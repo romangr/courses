@@ -56,11 +56,18 @@ public class CloseCourseTableBodyTag extends BodyTagSupport {
     public int doEndTag() throws JspException {
         String submit = localeStrings.getString("closeCourse.submit");
         try {
-            pageContext.getOut().write("<tr>" +
-                    "<td> <input type=\"submit\" value=\""+ submit +"\"/>" +
-                    "<input type=\"hidden\" value=\"closeCourse\" name=\"action\">" +
-                    "<input type=\"hidden\" value=\"" + courseId + "\" name=\"courseId\"> </td>" +
-                    "</tr></table></form>");
+            if (num > 0) {
+                pageContext.getOut().write("<tr>" +
+                        "<td> <input type=\"submit\" value=\""+ submit +"\"/>" +
+                        "<input type=\"hidden\" value=\"closeCourse\" name=\"action\">" +
+                        "<input type=\"hidden\" value=\"" + courseId + "\" name=\"courseId\"> </td>" +
+                        "</tr></table></form>");
+            } else {
+                pageContext.getOut().write(
+                        "<tr><td><a href=\"/course?id=" + courseId + "\">" +
+                                localeStrings.getString("closeCourse.backToCoursePage") + "</td>" +
+                        "</tr></table></form>");
+            }
             return SKIP_BODY;
         } catch (IOException e) {
             throw new JspTagException(e);

@@ -25,6 +25,7 @@ dependencies {
     compile 'org.projectlombok:lombok:+'
 
     compile 'ch.qos.logback:logback-classic:+'
+    compile 'log4j:log4j:1.2.17'
 
     testCompile 'junit:junit:+'
 }
