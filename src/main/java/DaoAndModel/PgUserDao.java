@@ -1,5 +1,6 @@
 package DaoAndModel;
 
+import DaoAndModel.DaoInterfaces.UserDao;
 import exceptions.SameEmailRegistrationException;
 import javase10.t02.cp.ConnectionPool;
 import org.postgresql.util.PSQLException;
@@ -10,7 +11,7 @@ import java.util.*;
 /**
  * Roman 25.04.2016.
  */
-public class UserDao {
+public class PgUserDao implements UserDao {
 
     private final ConnectionPool connectionPool;
 
@@ -225,11 +226,11 @@ public class UserDao {
         }
     }
 
-    UserDao(ConnectionPool connectionPool) {
+    PgUserDao(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
     }
 
-    private PreparedStatement getStatement(Connection connection, String sql) throws SQLException {
+    /*private PreparedStatement getStatement(Connection connection, String sql) throws SQLException {
         return connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-    }
+    }*/
 }

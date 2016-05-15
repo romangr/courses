@@ -1,5 +1,7 @@
 package DaoAndModel;
 
+import DaoAndModel.DaoInterfaces.CourseDao;
+import DaoAndModel.DaoInterfaces.UserDao;
 import javase10.t02.cp.ConnectionPool;
 
 /**
@@ -17,11 +19,11 @@ public class DaoCreator {
     }
 
     public UserDao newUserDao() {
-        return new UserDao(connectionPool);
+        return new PgUserDao(connectionPool);
     }
 
     public CourseDao newCourseDao() {
-        return new CourseDao(connectionPool);
+        return new PgCourseDao(connectionPool);
     }
 
     public void closeConnectionPool() {

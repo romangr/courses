@@ -1,57 +1,35 @@
 package DaoAndModel;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Roman 15.04.2016.
  */
+@AllArgsConstructor
 public class User implements Model {
+    @Getter
     private final int id;
+
+    @Getter @Setter
     private String firstName;
+
+    @Getter @Setter
     private String lastName;
+
+    @Getter
     private final String email;
+
+    @Getter
     private String passwordHash;
 
-    User(int id, String email) {
+    /*User(int id, String email) {
         this(id, email, null, null, null);
-    }
-
-    public User(int id, String firstName, String lastName, String email, String password) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.passwordHash = password;
-    }
+    }*/
 
     public void setPassword(String password) {
         this.passwordHash = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public int getId() {
-        return id;
     }
 
     @Override

@@ -1,8 +1,10 @@
 package servlets;
 
-import DaoAndModel.CourseDao;
+import DaoAndModel.DaoInterfaces.CourseDao;
+import DaoAndModel.DaoInterfaces.UserDao;
+import DaoAndModel.PgCourseDao;
 import DaoAndModel.Student;
-import DaoAndModel.UserDao;
+import DaoAndModel.PgUserDao;
 import listeners.DaoProvider;
 import org.apache.log4j.Logger;
 import taghandlers.JSPSetBean;
@@ -31,8 +33,8 @@ public class CloseCourseServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
-        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+        CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
+        UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
         Optional<String> courseId = ofNullable(req.getParameter("courseId"));
 

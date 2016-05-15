@@ -1,11 +1,12 @@
 package servlets;
 
 import DaoAndModel.*;
+import DaoAndModel.DaoInterfaces.CourseDao;
+import DaoAndModel.DaoInterfaces.UserDao;
 import listeners.DaoProvider;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.HttpConstraint;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,8 +29,8 @@ public class CourseServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
-        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+        CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
+        UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
         Optional<Course> courseOptional = ofNullable(req.getParameter("id"))
                 .flatMap((id) -> courseDao.getById(parseInt(id)));
@@ -65,8 +66,8 @@ public class CourseServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
-        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+        CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
+        UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
         ofNullable(req.getParameter("courseId"))
                 .ifPresent(courseId -> {

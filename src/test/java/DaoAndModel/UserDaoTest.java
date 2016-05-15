@@ -1,8 +1,8 @@
 package DaoAndModel;
 
+import DaoAndModel.DaoInterfaces.UserDao;
 import exceptions.SameEmailRegistrationException;
 import org.junit.Test;
-import org.postgresql.util.PSQLException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;

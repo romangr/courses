@@ -1,8 +1,8 @@
 package servlets;
 
 import DaoAndModel.Course;
-import DaoAndModel.CourseDao;
-import DaoAndModel.UserDao;
+import DaoAndModel.DaoInterfaces.CourseDao;
+import DaoAndModel.PgCourseDao;
 import listeners.DaoProvider;
 
 import javax.servlet.ServletException;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
@@ -27,8 +26,8 @@ import static java.util.Optional.ofNullable;
 public class EditCourseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
-        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+        CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
+        //UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
         Optional<Course> courseOptional = ofNullable(req.getParameter("id"))
                 .flatMap((id) -> courseDao.getById(parseInt(id)));

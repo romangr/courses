@@ -1,7 +1,7 @@
 package servlets;
 
-import DaoAndModel.CourseDao;
-import DaoAndModel.UserDao;
+import DaoAndModel.DaoInterfaces.UserDao;
+import DaoAndModel.PgUserDao;
 import exceptions.SameEmailRegistrationException;
 import listeners.DaoProvider;
 import org.apache.log4j.Logger;
@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -33,7 +32,7 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+        UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
         Optional<String> firstNameOptional = ofNullable(req.getParameter("firstName"));
         Optional<String> lastNameOptional = ofNullable(req.getParameter("lastName"));

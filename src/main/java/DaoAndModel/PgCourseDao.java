@@ -1,5 +1,6 @@
 package DaoAndModel;
 
+import DaoAndModel.DaoInterfaces.CourseDao;
 import javase10.t02.cp.ConnectionPool;
 
 import java.sql.*;
@@ -11,7 +12,7 @@ import static DaoAndModel.Course.OPEN;
 /**
  * Roman 25.04.2016.
  */
-public class CourseDao {
+public class PgCourseDao implements CourseDao {
 
     private final ConnectionPool connectionPool;
 
@@ -121,7 +122,7 @@ public class CourseDao {
         return courses;
     }
 
-    public Set<Course> getAvailibleCourses() {
+    public Set<Course> getAvailableCourses() {
         String sql = "SELECT course.id as cid, name, description, status, users.id as uid, " +
                 "users.first_name, users.last_name, users.email, users.password" +
                 " FROM course join users on course.teacher_id = users.id where status = " + Course.OPEN;
@@ -150,9 +151,9 @@ public class CourseDao {
         return courses;
     }
 
-    private PreparedStatement getStatement(Connection connection, String sql) throws SQLException {
+    /*private PreparedStatement getStatement(Connection connection, String sql) throws SQLException {
         return connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-    }
+    }*/
 
     public Collection<Course> getUserCourses(User user) {
         String sql = "SELECT course.id cid, course.name, course.description, course.status, " +
@@ -234,7 +235,7 @@ public class CourseDao {
         }
     }
 
-    CourseDao(ConnectionPool connectionPool) {
+    PgCourseDao(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
     }
 }

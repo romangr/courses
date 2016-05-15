@@ -1,9 +1,11 @@
 package servlets;
 
 import DaoAndModel.Course;
-import DaoAndModel.CourseDao;
+import DaoAndModel.DaoInterfaces.CourseDao;
+import DaoAndModel.DaoInterfaces.UserDao;
+import DaoAndModel.PgCourseDao;
 import DaoAndModel.User;
-import DaoAndModel.UserDao;
+import DaoAndModel.PgUserDao;
 import listeners.DaoProvider;
 import org.apache.log4j.Logger;
 import taghandlers.JSPSetBean;
@@ -16,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Optional.ofNullable;
@@ -31,8 +32,8 @@ public class MyCoursesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
-        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+        CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
+        UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
         Optional<User> userOptional = ofNullable(req.getUserPrincipal())
                 .flatMap(userPrincipal -> ofNullable(userPrincipal.getName()))

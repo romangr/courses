@@ -1,7 +1,8 @@
 package filters;
 
 import DaoAndModel.Course;
-import DaoAndModel.CourseDao;
+import DaoAndModel.DaoInterfaces.CourseDao;
+import DaoAndModel.PgCourseDao;
 import listeners.DaoProvider;
 import org.apache.log4j.Logger;
 import taghandlers.JSPSetBean;
@@ -25,8 +26,8 @@ public class IndexSetBeanFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
-        Set<Course> courses = courseDao.getAvailibleCourses();
+        CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
+        Set<Course> courses = courseDao.getAvailableCourses();
         JSPSetBean<Course> jspSetBean  = new JSPSetBean<>(courses);
         request.setAttribute("availibleCoursesBean", jspSetBean);
         LOGGER.trace("BEAN FILTER");
