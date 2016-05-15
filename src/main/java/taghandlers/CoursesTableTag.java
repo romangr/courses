@@ -24,9 +24,7 @@ public class CoursesTableTag extends TagSupport {
         try {
             JspWriter out = pageContext.getOut();
             out.write("<table style=\"border: 1px solid #000;\">");
-            Iterator<Course> iterator = set.getIterator();
-            while (iterator.hasNext()){
-                Course course = iterator.next();
+            for (Course course : set){
                 out.write("<tr><td><a href=\"/course?id=" + course.getId() + "\">" + course.getName() + "</a></td>" +
                                 "<td>" + course.getDescription() + "</td></tr>");
             }

@@ -7,12 +7,17 @@
 <fmt:setLocale value="${sessionScope.local}"/>
 <fmt:setBundle basename="locale" var="local"/>
 <fmt:message bundle="${local}" key="index.title" var="title"/>
+<fmt:message bundle="${local}" key="index.noCourses" var="noCourses"/>
+
 <html>
   <head>
     <title>${title}</title>
   </head>
   <body>
   <jsp:include page="WEB-INF/menu.jsp"/>
+  <c:if test="${availibleCoursesBean.size == 0}">
+    ${noCourses}
+  </c:if>
   <cst:jspset set="${requestScope.availibleCoursesBean}"/>
   </body>
 </html>

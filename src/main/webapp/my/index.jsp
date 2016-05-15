@@ -15,6 +15,7 @@
 <fmt:setBundle basename="locale" var="local"/>
 <fmt:message bundle="${local}" key="my.title" var="title"/>
 <fmt:message bundle="${local}" key="my.createCourse" var="createCourse"/>
+<fmt:message bundle="${local}" key="my.noCourses" var="noCourses"/>
 
 <html>
 <head>
@@ -31,6 +32,9 @@
         </c:if>
     </tr>
 </table>
+<c:if test="${myCoursesBean.size == 0}">
+    ${noCourses}
+</c:if>
 <cst:jspset set="${requestScope.myCoursesBean}"/>
 </body>
 </html>
