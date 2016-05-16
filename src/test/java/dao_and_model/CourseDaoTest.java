@@ -1,7 +1,7 @@
-package DaoAndModel;
+package dao_and_model;
 
-import DaoAndModel.DaoInterfaces.CourseDao;
-import DaoAndModel.DaoInterfaces.UserDao;
+import dao_and_model.dao_interfaces.CourseDao;
+import dao_and_model.dao_interfaces.UserDao;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

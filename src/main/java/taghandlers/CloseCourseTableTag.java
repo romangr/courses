@@ -1,13 +1,11 @@
 package taghandlers;
 
-import DaoAndModel.Course;
-import DaoAndModel.Student;
+import dao_and_model.Student;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * Roman 07.05.2016.

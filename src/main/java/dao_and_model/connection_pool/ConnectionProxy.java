@@ -1,4 +1,4 @@
-package DaoAndModel.connectionPool;
+package dao_and_model.connection_pool;
 
 
 import java.sql.*;
@@ -10,7 +10,7 @@ import java.util.concurrent.Executor;
  * Proxy for {@link Connection}
  */
 @FunctionalInterface
-public interface ConnectionProxy extends Connection, Proxy<Connection> {
+interface ConnectionProxy extends Connection, Proxy<Connection> {
 
     @Override
     default Statement createStatement() throws SQLException {

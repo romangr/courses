@@ -1,8 +1,8 @@
 package servlets;
 
-import DaoAndModel.*;
-import DaoAndModel.DaoInterfaces.CourseDao;
-import DaoAndModel.DaoInterfaces.UserDao;
+import dao_and_model.*;
+import dao_and_model.dao_interfaces.CourseDao;
+import dao_and_model.dao_interfaces.UserDao;
 import listeners.DaoProvider;
 import org.apache.log4j.Logger;
 

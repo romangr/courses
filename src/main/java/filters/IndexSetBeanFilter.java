@@ -1,8 +1,8 @@
 package filters;
 
-import DaoAndModel.Course;
-import DaoAndModel.DaoInterfaces.CourseDao;
-import DaoAndModel.PgCourseDao;
+import dao_and_model.Course;
+import dao_and_model.dao_interfaces.CourseDao;
+import dao_and_model.PgCourseDao;
 import listeners.DaoProvider;
 import org.apache.log4j.Logger;
 import taghandlers.JSPSetBean;

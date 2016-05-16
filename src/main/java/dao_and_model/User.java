@@ -1,4 +1,4 @@
-package DaoAndModel;
+package dao_and_model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

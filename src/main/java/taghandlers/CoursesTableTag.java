@@ -1,12 +1,11 @@
 package taghandlers;
 
-import DaoAndModel.Course;
+import dao_and_model.Course;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * Creates simple table with elements from {@code set}

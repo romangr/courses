@@ -1,16 +1,16 @@
-package DaoAndModel;
+package dao_and_model;
 
-import DaoAndModel.DaoInterfaces.CourseDao;
-import DaoAndModel.connectionPool.ConnectionPool;
+import dao_and_model.dao_interfaces.CourseDao;
+import dao_and_model.connection_pool.ConnectionPool;
 
 import java.sql.*;
 import java.util.*;
 
 import static java.util.Optional.of;
-import static DaoAndModel.Course.OPEN;
+import static dao_and_model.Course.OPEN;
 
 /**
- * Implementation of {@link DaoAndModel.DaoInterfaces.CourseDao} for PostgreSQL.
+ * Implementation of {@link dao_and_model.dao_interfaces.CourseDao} for PostgreSQL.
  * Roman 25.04.2016.
  */
 public class PgCourseDao implements CourseDao {
@@ -157,8 +157,8 @@ public class PgCourseDao implements CourseDao {
     }*/
 
     /**
-    * @return collection of {@link DaoAndModel.Course} contains all the courses students is subscribed on or all the courses were created by teacher.
-    * @param user {@link DaoAndModel.Student} or {@link DaoAndModel.Teacher}
+    * @return collection of {@link dao_and_model.Course} contains all the courses students is subscribed on or all the courses were created by teacher.
+    * @param user {@link dao_and_model.Student} or {@link dao_and_model.Teacher}
     */
     public Collection<Course> getUserCourses(User user) {
         String sql = "SELECT course.id cid, course.name, course.description, course.status, " +

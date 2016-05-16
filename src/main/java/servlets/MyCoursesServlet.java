@@ -1,11 +1,11 @@
 package servlets;
 
-import DaoAndModel.Course;
-import DaoAndModel.DaoInterfaces.CourseDao;
-import DaoAndModel.DaoInterfaces.UserDao;
-import DaoAndModel.PgCourseDao;
-import DaoAndModel.User;
-import DaoAndModel.PgUserDao;
+import dao_and_model.Course;
+import dao_and_model.dao_interfaces.CourseDao;
+import dao_and_model.dao_interfaces.UserDao;
+import dao_and_model.PgCourseDao;
+import dao_and_model.User;
+import dao_and_model.PgUserDao;
 import listeners.DaoProvider;
 import org.apache.log4j.Logger;
 import taghandlers.JSPSetBean;

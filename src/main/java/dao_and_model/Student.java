@@ -1,4 +1,4 @@
-package DaoAndModel;
+package dao_and_model;
 
 /**
  * Domain model object Student.

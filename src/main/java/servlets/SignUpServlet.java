@@ -1,7 +1,7 @@
 package servlets;
 
-import DaoAndModel.DaoInterfaces.UserDao;
-import DaoAndModel.PgUserDao;
+import dao_and_model.dao_interfaces.UserDao;
+import dao_and_model.PgUserDao;
 import exceptions.SameEmailRegistrationException;
 import listeners.DaoProvider;
 import org.apache.log4j.Logger;

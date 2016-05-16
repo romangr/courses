@@ -1,4 +1,4 @@
-package DaoAndModel.connectionPool;
+package dao_and_model.connection_pool;
 
 import java.sql.Connection;
 import java.sql.SQLException;

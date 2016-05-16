@@ -1,4 +1,4 @@
-package DaoAndModel.connectionPool;
+package dao_and_model.connection_pool;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -23,10 +22,10 @@ public class ConnectionPool {
     private int poolSize;
     private boolean closing;
 
-    public ConnectionPool() {
+    public ConnectionPool(String dbPropertiesPath) {
 
         Properties properties = new Properties();
-        try (FileInputStream fileInputStream = new FileInputStream("resources/db.properties")) {
+        try (FileInputStream fileInputStream = new FileInputStream(dbPropertiesPath)) {
             properties.load(fileInputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -60,18 +59,15 @@ public class ConnectionPool {
             freeConnections = new ArrayBlockingQueue<>(poolSize);
 
             for (int i = 0; i < poolSize; i++) {
-                String longUrl = url + "?user=" + user + "&password=" + password;
-                //Connection connection = DriverManager.getConnection(url, user, password);
-                /*Connection connection = DriverManager.getConnection(
-                        "jdbc:postgresql://localhost/Courses?user=postgres&password=Axe2013"
-                );*/
-                Connection connection = DriverManager.getConnection(longUrl);
+                //String longUrl = url + "?user=" + user + "&password=" + password;
+                Connection connection = DriverManager.getConnection(url, user, password);
+                //Connection connection = DriverManager.getConnection(longUrl);
                 PooledConnection pooledConnection =
                         PooledConnection.wrap(connection, freeConnections, reservedConnections);
                 freeConnections.add(pooledConnection);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("SQLException in ConnectionPool", e);
+            throw new RuntimeException("SQLException in connection_pool", e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Can't find database driver class", e);
         }

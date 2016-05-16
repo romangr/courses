@@ -1,4 +1,4 @@
-package DaoAndModel.connectionPool;
+package dao_and_model.connection_pool;
 
 @FunctionalInterface
 public interface Proxy<T> {

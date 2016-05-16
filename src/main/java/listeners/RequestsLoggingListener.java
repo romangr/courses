@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
  * Logs all the requests which have been initialized
  * Roman 15.05.2016.
  */
-
 @WebListener
 public class RequestsLoggingListener implements ServletRequestListener {
 

@@ -1,6 +1,4 @@
-package DaoAndModel;
-
-import lombok.AllArgsConstructor;
+package dao_and_model;
 
 /**
  * Domain model object Teacher.

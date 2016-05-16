@@ -1,6 +1,6 @@
-package DaoAndModel;
+package dao_and_model;
 
-import DaoAndModel.DaoInterfaces.UserDao;
+import dao_and_model.dao_interfaces.UserDao;
 import exceptions.SameEmailRegistrationException;
 import org.junit.Test;
 

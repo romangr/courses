@@ -1,26 +1,26 @@
-package DaoAndModel;
+package dao_and_model;
 
-import DaoAndModel.DaoInterfaces.CourseDao;
-import DaoAndModel.DaoInterfaces.UserDao;
-import DaoAndModel.connectionPool.ConnectionPool;
+import dao_and_model.dao_interfaces.CourseDao;
+import dao_and_model.dao_interfaces.UserDao;
+import dao_and_model.connection_pool.ConnectionPool;
 
 
 /**
- * Creator of objects of classes which implements interface {@link DaoAndModel.DaoInterfaces.Dao}
+ * Creator of objects of classes which implements interface {@link dao_and_model.dao_interfaces.Dao}
  * Roman 15.04.2016.
  */
 public class DaoCreator {
     private final ConnectionPool connectionPool;
 
     /**
-     * Creates {@link DaoAndModel.DaoCreator} with default or properties settings of connection pool.
+     * Creates {@link dao_and_model.DaoCreator} with default or properties settings of connection pool.
      */
-    public DaoCreator() {
-        connectionPool = new ConnectionPool();
+    public DaoCreator(String dbPropertiesPath) {
+        connectionPool = new ConnectionPool(dbPropertiesPath);
     }
 
     /**
-     * Creates {@link DaoAndModel.DaoCreator} with default or properties settings of connection pool.
+     * Creates {@link dao_and_model.DaoCreator} with default or properties settings of connection pool.
      * @param driverName Name of jdbc driver
      * @param url Url of database
      * @param user Database user

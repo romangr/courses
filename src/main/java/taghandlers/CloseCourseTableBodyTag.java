@@ -1,7 +1,5 @@
 package taghandlers;
 
-import DaoAndModel.Student;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.BodyTagSupport;

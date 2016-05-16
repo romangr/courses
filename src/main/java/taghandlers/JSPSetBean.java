@@ -1,6 +1,6 @@
 package taghandlers;
 
-import DaoAndModel.Model;
+import dao_and_model.Model;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 
 /**
-* Collection of {@link DaoAndModel.Model} implementations.
+* Collection of {@link dao_and_model.Model} implementations.
 */
 public class JSPSetBean<T extends Model> implements Iterable<T> {
     private Iterator<T> it;

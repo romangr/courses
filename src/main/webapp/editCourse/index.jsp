@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <c:if test="${requestScope.get(\"course\") != null}">
-    <jsp:useBean id="course" type="DaoAndModel.Course" scope="request"/>
+    <jsp:useBean id="course" type="dao_and_model.Course" scope="request"/>
 </c:if>
 
 <%--locale setting--%>

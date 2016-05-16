@@ -1,15 +1,15 @@
-package DaoAndModel;
+package dao_and_model;
 
-import DaoAndModel.DaoInterfaces.UserDao;
+import dao_and_model.dao_interfaces.UserDao;
 import exceptions.SameEmailRegistrationException;
-import DaoAndModel.connectionPool.ConnectionPool;
+import dao_and_model.connection_pool.ConnectionPool;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 import java.util.*;
 
 /**
- * Implementation of {@link DaoAndModel.DaoInterfaces.UserDao} for PostgreSQL
+ * Implementation of {@link dao_and_model.dao_interfaces.UserDao} for PostgreSQL
  * Roman 25.04.2016.
  */
 public class PgUserDao implements UserDao {
@@ -128,7 +128,7 @@ public class PgUserDao implements UserDao {
     }
 
     /**
-    * @return new instance of {@link DaoAndModel.Student} or {@link DaoAndModel.Teacher}
+    * @return new instance of {@link dao_and_model.Student} or {@link dao_and_model.Teacher}
     * @param type if 0 then User, if 1 then Teacher
     */
     private User createUser(String firstName, String lastName,

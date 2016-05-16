@@ -2,9 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page errorPage="/error.jsp" %>
-<jsp:useBean id="course" type="DaoAndModel.Course" scope="request"/>
+<jsp:useBean id="course" type="dao_and_model.Course" scope="request"/>
 <c:if test="${requestScope.user != null}">
-    <jsp:useBean id="user" type="DaoAndModel.User" scope="request"/>
+    <jsp:useBean id="user" type="dao_and_model.User" scope="request"/>
 </c:if>
 <jsp:useBean id="usersCourse" type="java.lang.Boolean" scope="request"/>
 

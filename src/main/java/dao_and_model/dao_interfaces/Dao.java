@@ -1,10 +1,9 @@
-package DaoAndModel.DaoInterfaces;
+package dao_and_model.dao_interfaces;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
 import java.util.Optional;
 
 /**

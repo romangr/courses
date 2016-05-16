@@ -1,3 +1,4 @@
+-- noinspection SqlNoDataSourceInspectionForFile
 CREATE TABLE course
 (
   id          INTEGER PRIMARY KEY NOT NULL,

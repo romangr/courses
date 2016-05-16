@@ -1,4 +1,4 @@
-package DaoAndModel;
+package dao_and_model;
 
 /**
  * Interface, classes of domain model have to implement. 
