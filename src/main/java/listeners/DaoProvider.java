@@ -13,6 +13,8 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 /**
+ * Creates implementations' of {@link DaoAndModel.DaoInterfaces.Dao} instances
+ * and adds it as an attribute to {@link javax.servlet.ServletContext}
  * Roman 27.04.2016.
  */
 @WebListener

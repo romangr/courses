@@ -18,15 +18,25 @@ import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Optional.ofNullable;
+import static servlets.CourseManageServlet.ACTION;
 
 /**
+ * Preapares /course/index,jsp and make subscribe/unsubscribe actions for students.
  * Roman 29.04.2016.
  */
 @WebServlet("/course")
 public class CourseServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(CourseServlet.class.getName());
+    static final String COURSE_ID = "courseId";
+    static final String COURSE_NAME = "courseName";
+    static final String COURSE_DESCRIPTION = "courseDescription";
 
+    /**
+    * Prepares course's page. Adds course bean in request.
+    * {@code usersCourse} bean contains true, when course has been created by current user
+    * or current user is subscribed to it.
+    */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
@@ -64,12 +74,17 @@ public class CourseServlet extends HttpServlet {
         }
     }
 
+    /**
+    * Subscribe or unsubscribe student to course.
+    * Request must have {@code courseId} parameter,
+    * To unsubscribe request must have {@code action} parameter.
+    */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
         UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
-        ofNullable(req.getParameter("courseId"))
+        ofNullable(req.getParameter(COURSE_ID))
                 .ifPresent(courseId -> {
                     Optional<String> userNameOptional = ofNullable(req.getUserPrincipal()).map(Principal::getName);
 
@@ -79,7 +94,7 @@ public class CourseServlet extends HttpServlet {
                                     Optional<Course> courseOptional = courseDao.getById(parseInt(courseId));
                                     try {
                                         if (courseOptional.isPresent()) {
-                                            Optional<String> actionOptional = ofNullable(req.getParameter("action"));
+                                            Optional<String> actionOptional = ofNullable(req.getParameter(ACTION));
                                             if (!actionOptional.isPresent()){
                                                 courseDao.addCourseToStudent(courseOptional.get(), (Student) user);
                                             } else {

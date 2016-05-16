@@ -12,6 +12,7 @@ import java.util.Optional;
 import static java.util.Optional.ofNullable;
 
 /**
+ * Save in session locale has been choosen by user.
  * Roman 14.05.2016.
  */
 @WebServlet("/localize")

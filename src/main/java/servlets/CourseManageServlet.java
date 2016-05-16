@@ -18,24 +18,37 @@ import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Optional.ofNullable;
+import static servlets.CourseServlet.COURSE_DESCRIPTION;
+import static servlets.CourseServlet.COURSE_ID;
+import static servlets.CourseServlet.COURSE_NAME;
 
 /**
+ * Manages courses: deletes, changes status, edits name and description, creates.
  * Roman 05.05.2016.
  */
 @WebServlet("/course/manage")
 @ServletSecurity(@HttpConstraint(rolesAllowed = "teacher"))
 public class CourseManageServlet extends HttpServlet {
 
+    static final String ACTION = "action";
+
     private static final Logger LOGGER = Logger.getLogger(CourseManageServlet.class.getName());
 
+    /**
+    * Request must have parameter {@code action}.
+    * If action affects existed course, request must have parameter {@code courseId}.
+    * To edit description request must have {@code courseName} and/or {@code courseDescription} parameters.
+    * To close course request must have arrays of parameters {@code uid} (user id), {@code mark} and {@code note}.
+    * To create course request must have {@code courseName} and {@code courseDescription} parameters.
+    */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
 
-        Optional<String> action = ofNullable(req.getParameter("action"));
+        Optional<String> action = ofNullable(req.getParameter(ACTION));
 
         if (action.isPresent()) {
-            Optional<String> courseId = ofNullable(req.getParameter("courseId"));
+            Optional<String> courseId = ofNullable(req.getParameter(COURSE_ID));
             if (courseId.isPresent()) {
                 Optional<Course> courseOptional = courseDao.getById(parseInt(courseId.get()));
                 if (courseOptional.isPresent()) {
@@ -51,8 +64,8 @@ public class CourseManageServlet extends HttpServlet {
                             LOGGER.info("Registration closed on course " + course.getName());
                             break;
                         case "editCourse":
-                            ofNullable(req.getParameter("courseName")).ifPresent(course::setName);
-                            ofNullable(req.getParameter("courseDescription")).ifPresent(course::setDescription);
+                            ofNullable(req.getParameter(COURSE_NAME)).ifPresent(course::setName);
+                            ofNullable(req.getParameter(COURSE_DESCRIPTION)).ifPresent(course::setDescription);
                             courseDao.update(course);
                             LOGGER.info("Course has been edited " + course.getName());
                             break;
@@ -85,8 +98,8 @@ public class CourseManageServlet extends HttpServlet {
                         UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
                         Optional<User> userOptional = userDao.getUserByEmail(req.getUserPrincipal().getName());
                         if (userOptional.isPresent()) {
-                            Optional<String> courseNameOptional = ofNullable(req.getParameter("courseName"));
-                            Optional<String> courseDescriptionOptional = ofNullable(req.getParameter("courseDescription"));
+                            Optional<String> courseNameOptional = ofNullable(req.getParameter(COURSE_NAME));
+                            Optional<String> courseDescriptionOptional = ofNullable(req.getParameter(COURSE_DESCRIPTION));
 
                             if (courseNameOptional.isPresent() && courseDescriptionOptional.isPresent()) {
                                 Course newCourse = courseDao.create(

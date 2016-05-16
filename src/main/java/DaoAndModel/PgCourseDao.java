@@ -1,7 +1,7 @@
 package DaoAndModel;
 
 import DaoAndModel.DaoInterfaces.CourseDao;
-import javase10.t02.cp.ConnectionPool;
+import DaoAndModel.connectionPool.ConnectionPool;
 
 import java.sql.*;
 import java.util.*;
@@ -10,6 +10,7 @@ import static java.util.Optional.of;
 import static DaoAndModel.Course.OPEN;
 
 /**
+ * Implementation of {@link DaoAndModel.DaoInterfaces.CourseDao} for PostgreSQL.
  * Roman 25.04.2016.
  */
 public class PgCourseDao implements CourseDao {
@@ -155,6 +156,10 @@ public class PgCourseDao implements CourseDao {
         return connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     }*/
 
+    /**
+    * @return collection of {@link DaoAndModel.Course} contains all the courses students is subscribed on or all the courses were created by teacher.
+    * @param user {@link DaoAndModel.Student} or {@link DaoAndModel.Teacher}
+    */
     public Collection<Course> getUserCourses(User user) {
         String sql = "SELECT course.id cid, course.name, course.description, course.status, " +
                 "users.id uid, users.first_name, users.last_name, users.email, users.password " +
@@ -223,6 +228,9 @@ public class PgCourseDao implements CourseDao {
         }
     }
 
+    /**
+    * Subscribe user on new course and avoid code duplication  
+    */
     private boolean updateStudentCourses(Course course, Student student, String sql) {
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement statement = getStatement(connection, sql)) {

@@ -17,6 +17,7 @@ import java.util.Optional;
 import static java.util.Optional.ofNullable;
 
 /**
+ * Save locale in session if it's present in request or set default locale.
  * Roman 14.05.2016.
  */
 @WebFilter("/*")

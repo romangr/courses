@@ -19,6 +19,7 @@ import static java.lang.Integer.parseInt;
 import static java.util.Optional.ofNullable;
 
 /**
+ * Prepare /editCourse/index.jsp page: adds course bean.
  * Roman 05.05.2016.
  */
 @WebServlet("/editCourse")

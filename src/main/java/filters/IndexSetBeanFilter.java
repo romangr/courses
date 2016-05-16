@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
+ * Adds bean with available courses in request for /index.jsp page
  * Roman 27.04.2016.
  */
 @WebFilter("/index.jsp")

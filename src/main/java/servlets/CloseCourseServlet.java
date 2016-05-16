@@ -21,8 +21,10 @@ import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Optional.ofNullable;
+import static servlets.CourseServlet.COURSE_ID;
 
 /**
+ * Prepare page /closeCourse/index.jsp: adds bean with students subscribed to course.
  * Roman 07.05.2016.
  */
 @WebServlet("/closeCourse")
@@ -31,12 +33,15 @@ public class CloseCourseServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(CloseCourseServlet.class.getName());
 
+    /**
+    * Request must have {@code courseId} parameter
+    */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
         UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
-        Optional<String> courseId = ofNullable(req.getParameter("courseId"));
+        Optional<String> courseId = ofNullable(req.getParameter(COURSE_ID));
 
         if (courseId.isPresent()) {
             courseDao.getById(parseInt(courseId.get()))

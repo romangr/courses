@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * Logout current user.
  * Roman 05.05.2016.
  */
 @WebServlet("/logout")

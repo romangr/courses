@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Logs all the requests which have been initialized
  * Roman 15.05.2016.
  */
 

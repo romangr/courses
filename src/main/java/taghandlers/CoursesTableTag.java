@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
+ * Creates simple table with elements from {@code set}
  * Roman 27.04.2016.
  */
 public class CoursesTableTag extends TagSupport {

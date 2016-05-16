@@ -6,6 +6,10 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+
+/**
+* Collection of {@link DaoAndModel.Model} implementations.
+*/
 public class JSPSetBean<T extends Model> implements Iterable<T> {
     private Iterator<T> it;
     private Set<T> set;
@@ -26,11 +30,19 @@ public class JSPSetBean<T extends Model> implements Iterable<T> {
         return set.size();
     }
 
+    /**
+    * Deprecated: use foreach.
+    */
+    @Deprecated
     public Iterator<T> getIterator() {
         it = set.iterator();
         return it;
     }
 
+    /**
+    * @return next element in set cyclically if it exists, null if set is empty.
+    * Deprecated: using {@code elements()} is more properly.
+    */
     @Deprecated
     public T getElement() {
         if (set.size() == 0) return null;
@@ -40,6 +52,10 @@ public class JSPSetBean<T extends Model> implements Iterable<T> {
         return currentElement = it.next();
     }
 
+    /**
+    * @return id of last element have been got by {@code getElement()}
+    * Deprecated: using {@code elements()} is more properly.
+    */
     @Deprecated
     public int getElementId() {
         return (currentElement != null)
@@ -47,6 +63,9 @@ public class JSPSetBean<T extends Model> implements Iterable<T> {
                 : 0;
     }
 
+    /**
+    * @return stream of set's elements
+    */
     public Stream<T> elements() {
         return set.stream();
     }

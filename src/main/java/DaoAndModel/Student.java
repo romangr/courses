@@ -1,6 +1,7 @@
 package DaoAndModel;
 
 /**
+ * Domain model object Student.
  * Roman 15.04.2016.
  */
 public class Student extends User {

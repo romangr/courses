@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * Domain model object User.
  * Roman 15.04.2016.
  */
 @AllArgsConstructor
@@ -23,10 +24,6 @@ public class User implements Model {
 
     @Getter
     private String passwordHash;
-
-    /*User(int id, String email) {
-        this(id, email, null, null, null);
-    }*/
 
     public void setPassword(String password) {
         this.passwordHash = password;

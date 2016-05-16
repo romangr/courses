@@ -5,9 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
+ * Domain model object Course.
  * 25.04.2016 Roman.
  */
-
 @Data
 @AllArgsConstructor
 public class Course implements Model {

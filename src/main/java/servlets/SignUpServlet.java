@@ -17,6 +17,10 @@ import java.util.Optional;
 import static java.util.Optional.ofNullable;
 
 /**
+ * Registrate new user in system.
+ * To create new user request must have {@code firstName}, {@code lastName}, {@code email}, {@code password},
+ * {@code passwordConfirm} parameters.
+ * Other requirements to params is in code.
  * Roman 08.05.2016.
  */
 @WebServlet("/signUp")

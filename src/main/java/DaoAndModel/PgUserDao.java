@@ -2,13 +2,14 @@ package DaoAndModel;
 
 import DaoAndModel.DaoInterfaces.UserDao;
 import exceptions.SameEmailRegistrationException;
-import javase10.t02.cp.ConnectionPool;
+import DaoAndModel.connectionPool.ConnectionPool;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 import java.util.*;
 
 /**
+ * Implementation of {@link DaoAndModel.DaoInterfaces.UserDao} for PostgreSQL
  * Roman 25.04.2016.
  */
 public class PgUserDao implements UserDao {
@@ -126,6 +127,10 @@ public class PgUserDao implements UserDao {
         return students;
     }
 
+    /**
+    * @return new instance of {@link DaoAndModel.Student} or {@link DaoAndModel.Teacher}
+    * @param type if 0 then User, if 1 then Teacher
+    */
     private User createUser(String firstName, String lastName,
                             String email, String password, int type) throws SameEmailRegistrationException {
         String sql = "INSERT INTO users (first_name, last_name, email, password, type) VALUES (?,?,?,?,?)";

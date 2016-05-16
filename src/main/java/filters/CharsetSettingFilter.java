@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * Sets request's charset
  * Roman 05.05.2016.
  */
 @WebFilter("/*")

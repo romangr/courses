@@ -10,6 +10,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
+ * Handle {@code <jspclosecoursebody>} tag.
+ * Creates table with elements from body.
+ * If there are no elements, message about it will be printed.
  * Roman 07.05.2016.
  */
 public class CloseCourseTableBodyTag extends BodyTagSupport {

@@ -3,6 +3,7 @@ package DaoAndModel;
 import lombok.AllArgsConstructor;
 
 /**
+ * Domain model object Teacher.
  * Roman 15.04.2016.
  */
 
