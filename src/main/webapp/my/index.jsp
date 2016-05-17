@@ -20,7 +20,7 @@
 <jsp:include page="/WEB-INF/menu.jsp"/>
 <table>
     <tr>
-        <c:if test="${pageContext.request.isUserInRole(\"teaher\")}">
+        <c:if test="${pageContext.request.isUserInRole(\"teacher\")}">
             <td>
                 <input type="button" value="${createCourse}" onclick="location.href = '/editCourse/'">
             </td>
