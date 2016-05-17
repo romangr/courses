@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
@@ -30,6 +31,7 @@ import static java.util.Optional.ofNullable;
 public class MyCoursesServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(MyCoursesServlet.class.getName());
+    private static final int COURSES_ON_PAGE = 5;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -41,9 +43,34 @@ public class MyCoursesServlet extends HttpServlet {
                 .flatMap(userDao::getUserByEmail);
 
         if (userOptional.isPresent()) {
+            User user = userOptional.get();
             LOGGER.trace("userOptional is present");
-            LOGGER.trace(userOptional.get().getEmail());
-            Collection<Course> userCourses = courseDao.getUserCourses(userOptional.get());
+            LOGGER.trace(user.getEmail());
+
+            Optional<String> pageOptional = ofNullable(req.getParameter("page"));
+            int userCoursesNumber = courseDao.getUserCoursesNumber(user);
+            Collection<Course> userCourses;
+            if (userCoursesNumber > COURSES_ON_PAGE) {
+                if (pageOptional.isPresent()) {
+                    LOGGER.debug(pageOptional);
+                    int page = parseInt(pageOptional.get());
+                    LOGGER.debug("page " + page);
+                    LOGGER.debug("requested courses: " + COURSES_ON_PAGE * (page - 1) + " " + COURSES_ON_PAGE);
+                    userCourses = courseDao.getUserCourses(user, COURSES_ON_PAGE * (page - 1), COURSES_ON_PAGE);
+                    if (userCoursesNumber > COURSES_ON_PAGE * (page - 1) + COURSES_ON_PAGE) {
+                        LOGGER.trace("nextPage == true");
+                        req.setAttribute("nextPage", true);
+                    }
+                } else {
+                    userCourses = courseDao.getUserCourses(user, 0, COURSES_ON_PAGE);
+                    if (userCoursesNumber > COURSES_ON_PAGE) {
+                        LOGGER.trace("nextPage == true");
+                        req.setAttribute("nextPage", true);
+                    }
+                }
+            } else {
+                userCourses = courseDao.getUserCourses(user);
+            }
             JSPSetBean<Course> jspSetBean  = new JSPSetBean<>(userCourses);
             req.setAttribute("myCoursesBean", jspSetBean);
             getServletContext().getRequestDispatcher("/my/index.jsp").forward(req, resp);

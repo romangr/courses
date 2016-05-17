@@ -18,6 +18,7 @@
 <fmt:message bundle="${local}" key="course.deleteCourse" var="deleteCourse"/>
 <fmt:message bundle="${local}" key="course.closeRegistration" var="closeRegistration"/>
 <fmt:message bundle="${local}" key="course.closeCourse" var="closeCourse"/>
+<fmt:message bundle="${local}" key="course.teacher" var="teacher"/>
 
 
 <html>
@@ -29,6 +30,8 @@
 <%--${pageContext.request.isUserInRole(\"student\")}--%>
 <%--${requestScope.get(\"usersCourse\")}--%>
 <jsp:include page="/WEB-INF/menu.jsp"/>
+
+<%--manage course table--%>
 <table>
     <tr>
         <td>
@@ -84,6 +87,9 @@
     </tr>
 </table>
 <%=course.getName()%>
+<br/>
+<%--${teacher + ": " + course.teacher.firstName + " " + course.teacher.lastName}--%>
+${teacher}: ${course.teacher}
 <br/>
 <%=course.getDescription()%>
 </body>

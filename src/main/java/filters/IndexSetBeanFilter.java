@@ -14,7 +14,11 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Set;
+
+import static java.lang.Integer.parseInt;
+import static java.util.Optional.ofNullable;
 
 /**
  * Adds bean with available courses in request for /index.jsp page
@@ -24,11 +28,34 @@ import java.util.Set;
 public class IndexSetBeanFilter extends HttpFilter {
 
     private static final Logger LOGGER = Logger.getLogger(IndexSetBeanFilter.class.getName());
+    private static final int COURSES_ON_PAGE = 10;
 
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
-        Set<Course> courses = courseDao.getAvailableCourses();
+
+        Optional<String> pageOptional = ofNullable(request.getParameter("page"));
+        int coursesNumber = courseDao.getAvailableCoursesNumber();
+        LOGGER.trace("available courses: " + coursesNumber);
+        Set<Course> courses;
+        if (coursesNumber > COURSES_ON_PAGE) {
+            if (pageOptional.isPresent()) {
+                int page = parseInt(pageOptional.get());
+                courses = courseDao.getAvailableCourses(COURSES_ON_PAGE * (page - 1), COURSES_ON_PAGE);
+                if (coursesNumber > COURSES_ON_PAGE * (page - 1) + COURSES_ON_PAGE) {
+                    LOGGER.trace("nextPage == true");
+                    request.setAttribute("nextPage", true);
+                }
+            } else {
+                courses = courseDao.getAvailableCourses(0, COURSES_ON_PAGE);
+                if (coursesNumber > COURSES_ON_PAGE) {
+                    LOGGER.trace("nextPage == true");
+                    request.setAttribute("nextPage", true);
+                }
+            }
+        } else {
+            courses = courseDao.getAvailableCourses();
+        }
         JSPSetBean<Course> jspSetBean  = new JSPSetBean<>(courses);
         request.setAttribute("availibleCoursesBean", jspSetBean);
         LOGGER.trace("BEAN FILTER");

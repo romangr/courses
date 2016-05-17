@@ -46,7 +46,7 @@ public class PgCourseDao implements CourseDao {
             statement.setInt(4, course.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -58,7 +58,7 @@ public class PgCourseDao implements CourseDao {
             statement.setInt(1, course.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -118,38 +118,13 @@ public class PgCourseDao implements CourseDao {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return courses;
     }
 
     public Set<Course> getAvailableCourses() {
-        String sql = "SELECT course.id as cid, name, description, status, users.id as uid, " +
-                "users.first_name, users.last_name, users.email, users.password" +
-                " FROM course join users on course.teacher_id = users.id where status = " + Course.OPEN;
-        Set<Course> courses = new HashSet<>();
-        try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                courses.add(new Course(
-                        rs.getInt("cid"),
-                        new Teacher(
-                                rs.getInt("uid"),
-                                rs.getString("first_name"),
-                                rs.getString("last_name"),
-                                rs.getString("email"),
-                                rs.getString("password")),
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getInt("status")
-                ));
-            }
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return courses;
+        return getAvailableCourses(0, 0);
     }
 
     /*private PreparedStatement getStatement(Connection connection, String sql) throws SQLException {
@@ -224,7 +199,121 @@ public class PgCourseDao implements CourseDao {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int getAvailableCoursesNumber() {
+        String sql = "SELECT COUNT(*) as available_courses FROM Course " +
+                "WHERE status = 0";
+        try (Connection connection = connectionPool.takeConnection();
+             Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql);) {
+            if (rs.next()) {
+                return rs.getInt("available_courses");
+            } else {
+                throw new RuntimeException("Can't get number of available courses");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Set<Course> getAvailableCourses(int from, int count) {
+        String sql = "SELECT course.id as cid, name, description, status, users.id as uid, " +
+                "users.first_name, users.last_name, users.email, users.password" +
+                " FROM course join users on course.teacher_id = users.id where status = " + Course.OPEN;
+        if (count != 0) {
+            sql += " LIMIT " + count;
+        }
+        if (from != 0) {
+            sql += " OFFSET " + from;
+        }
+        Set<Course> courses = new HashSet<>();
+        try (Connection connection = connectionPool.takeConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                courses.add(new Course(
+                        rs.getInt("cid"),
+                        new Teacher(
+                                rs.getInt("uid"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
+                                rs.getString("email"),
+                                rs.getString("password")),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getInt("status")
+                ));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return courses;
+    }
+
+    @Override
+    public int getUserCoursesNumber(User user) {
+        String sql = "SELECT DISTINCT COUNT(*) as user_courses " +
+                "FROM course JOIN users " +
+                "ON course.teacher_id = users.id " +
+                "LEFT JOIN student_course ON " +
+                "course.id = student_course.course_id WHERE " +
+                ((user instanceof Student) ? "student_id = " : "teacher_id = ") + user.getId();
+        try (Connection connection = connectionPool.takeConnection();
+             Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("user_courses");
+            } else {
+                throw new RuntimeException("Can't get number of available courses");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Collection<Course> getUserCourses(User user, int from, int count) {
+        String sql = "SELECT DISTINCT course.id cid, course.name, course.description, course.status, " +
+                "users.id uid, users.first_name, users.last_name, users.email, users.password " +
+                "FROM course JOIN users " +
+                "ON course.teacher_id = users.id " +
+                "LEFT JOIN student_course ON " +
+                "course.id = student_course.course_id WHERE " +
+                ((user instanceof Student) ? "student_id = " : "teacher_id = " + user.getId());
+        if (count != 0) {
+            sql += " LIMIT " + count;
+        }
+        if (from != 0) {
+            sql += " OFFSET " + from;
+        }
+        System.out.println(sql);
+        Collection<Course> result = new HashSet<>();
+        try (Connection connection = connectionPool.takeConnection();
+             Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql)) {
+            while (rs.next()) {
+                result.add(new Course(
+                        rs.getInt("cid"),
+                        new Teacher(
+                                rs.getInt("uid"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
+                                rs.getString("email"),
+                                rs.getString("password")),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getInt("status")));
+            }
+            System.out.println(result.size());
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

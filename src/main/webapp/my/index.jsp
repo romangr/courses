@@ -30,6 +30,11 @@
 <c:if test="${myCoursesBean.size == 0}">
     ${noCourses}
 </c:if>
+
+<jsp:include page="/WEB-INF/indexPagination.jsp">
+    <jsp:param name="requestURL" value="/my"/>
+</jsp:include>
+
 <cst:jspset set="${requestScope.myCoursesBean}"/>
 </body>
 </html>
