@@ -38,8 +38,8 @@ public class CloseCourseServlet extends HttpServlet {
     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
-        UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+        CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
+        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
         Optional<String> courseId = ofNullable(req.getParameter(COURSE_ID));
 

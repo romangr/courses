@@ -32,7 +32,7 @@ public class IndexSetBeanFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
+        CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
 
         Optional<String> pageOptional = ofNullable(request.getParameter("page"));
         int coursesNumber = courseDao.getAvailableCoursesNumber();

@@ -1,6 +1,5 @@
 package dao_and_model;
 
-import dao_and_model.dao_interfaces.QueriesResolver;
 import dao_and_model.dao_interfaces.UserDao;
 import exceptions.SameEmailRegistrationException;
 import dao_and_model.connection_pool.ConnectionPool;

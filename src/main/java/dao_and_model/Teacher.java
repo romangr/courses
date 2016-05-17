@@ -7,7 +7,7 @@ package dao_and_model;
 
 public class Teacher extends User {
 
-    public Teacher(int id, String firstName, String lastName, String email, String password) {
+    Teacher(int id, String firstName, String lastName, String email, String password) {
         super(id, firstName, lastName, email, password);
     }
 }

@@ -43,7 +43,7 @@ public class CourseManageServlet extends HttpServlet {
     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
+        CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
 
         Optional<String> action = ofNullable(req.getParameter(ACTION));
 
@@ -73,7 +73,7 @@ public class CourseManageServlet extends HttpServlet {
                             String[] uids = req.getParameterValues("uid");
                             String[] marks = req.getParameterValues("mark");
                             String[] notes = req.getParameterValues("note");
-                            UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+                            UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
                             if (uids.length == marks.length && uids.length == notes.length) {
                                 for (int i = 0; i < uids.length; i++) {
@@ -95,7 +95,7 @@ public class CourseManageServlet extends HttpServlet {
                 switch (action.get()) {
                     case "createCourse":
                         LOGGER.trace("creating course");
-                        UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+                        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
                         Optional<User> userOptional = userDao.getUserByEmail(req.getUserPrincipal().getName());
                         if (userOptional.isPresent()) {
                             Optional<String> courseNameOptional = ofNullable(req.getParameter(COURSE_NAME));

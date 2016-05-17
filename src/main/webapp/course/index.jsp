@@ -1,12 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page errorPage="/error.jsp" %>
+<%--<%@ page errorPage="/error.jsp" %>--%>
 <jsp:useBean id="course" type="dao_and_model.Course" scope="request"/>
 <c:if test="${requestScope.user != null}">
     <jsp:useBean id="user" type="dao_and_model.User" scope="request"/>
 </c:if>
 <jsp:useBean id="usersCourse" type="java.lang.Boolean" scope="request"/>
+<c:if test="${requestScope.teachersConclusion != null}">
+    <jsp:useBean id="teachersConclusion" type="dao_and_model.TeachersConclusion" scope="request"/>
+</c:if>
 
 <%--locale setting--%>
 <fmt:setLocale value="${sessionScope.local}"/>
@@ -19,6 +22,8 @@
 <fmt:message bundle="${local}" key="course.closeRegistration" var="closeRegistration"/>
 <fmt:message bundle="${local}" key="course.closeCourse" var="closeCourse"/>
 <fmt:message bundle="${local}" key="course.teacher" var="teacher"/>
+<fmt:message bundle="${local}" key="course.mark" var="mark"/>
+<fmt:message bundle="${local}" key="course.note" var="note"/>
 
 
 <html>
@@ -36,14 +41,14 @@
     <tr>
         <td>
             <%--pageContext.request.isUserInRole(\"student\") &&--%>
-            <c:if test="${!usersCourse && (course.status == 0)}">
+            <c:if test="${!usersCourse && (course.status == 0) && pageContext.request.isUserInRole(\"student\")}">
                 <form method="post" action="/course">
                     <input type="hidden" value="${course.id}" name="courseId">
                     <input type="hidden" value="${user.id}" name="studentId">
                     <input type="submit" value="${subscribe}">
                 </form>
             </c:if>
-            <c:if test="${pageContext.request.isUserInRole(\"student\") && usersCourse}">
+            <c:if test="${pageContext.request.isUserInRole(\"student\") && usersCourse && course.status != 2}">
                 <form method="post" action="/course">
                     <input type="hidden" value="${course.id}" name="courseId">
                     <input type="hidden" value="${user.id}" name="studentId">
@@ -92,5 +97,15 @@
 ${teacher}: ${course.teacher}
 <br/>
 <%=course.getDescription()%>
+<br/>
+<c:if test="${requestScope.teachersConclusion != null}">
+    <br/>
+    ${mark}:
+    <br>
+    ${teachersConclusion.mark}
+    <br/>
+    ${note}:
+    <br/>${teachersConclusion.note}
+</c:if>
 </body>
 </html>

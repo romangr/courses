@@ -1,11 +1,9 @@
 package dao_and_model.dao_interfaces;
 
-import dao_and_model.Course;
-import dao_and_model.Student;
-import dao_and_model.Teacher;
-import dao_and_model.User;
+import dao_and_model.*;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -70,4 +68,9 @@ public interface CourseDao extends Dao<Course> {
      * @param count number of courses to get
      */
     Collection<Course> getUserCourses(User user, int from, int count);
+
+    /**
+     * @return TeachersConclusion for student subscribed to finished course
+     */
+    Optional<TeachersConclusion> getTeachersConclusion(Course course, Student student);
 }

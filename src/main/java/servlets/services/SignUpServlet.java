@@ -36,7 +36,7 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
         Optional<String> firstNameOptional = ofNullable(req.getParameter("firstName"));
         Optional<String> lastNameOptional = ofNullable(req.getParameter("lastName"));

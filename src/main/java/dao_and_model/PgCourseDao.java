@@ -2,14 +2,13 @@ package dao_and_model;
 
 import dao_and_model.connection_pool.ConnectionPool;
 import dao_and_model.dao_interfaces.CourseDao;
-import dao_and_model.dao_interfaces.QueriesResolver;
-import filters.IndexSetBeanFilter;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.*;
 
 import static dao_and_model.Course.OPEN;
+import static java.util.Optional.of;
 
 /**
  * Implementation of {@link dao_and_model.dao_interfaces.CourseDao} for PostgreSQL.
@@ -77,7 +76,7 @@ public class PgCourseDao implements CourseDao {
         if (courseSet.size() == 0) {
             return Optional.empty();
         } else {
-            return Optional.of(courseSet.iterator().next());
+            return of(courseSet.iterator().next());
         }
     }
 
@@ -132,6 +131,29 @@ public class PgCourseDao implements CourseDao {
                 }
             }
             rs.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Optional<TeachersConclusion> getTeachersConclusion(Course course, Student student) {
+        String sql = "SELECT mark, note FROM student_course " +
+                "WHERE mark IS NOT NULL AND course_id = " + course.getId() + " AND student_id = " + student.getId();
+        try (Connection connection = connectionPool.takeConnection();
+             Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql)) {
+            if (rs.next()) {
+                return of(new TeachersConclusion(
+                        course,
+                        student,
+                        rs.getInt("mark"),
+                        rs.getString("note")
+                ));
+            } else {
+                return Optional.empty();
+            }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
             throw new RuntimeException(e);

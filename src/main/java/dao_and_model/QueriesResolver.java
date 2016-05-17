@@ -1,9 +1,5 @@
-package dao_and_model.dao_interfaces;
+package dao_and_model;
 
-import dao_and_model.Course;
-import dao_and_model.Model;
-import dao_and_model.Student;
-import dao_and_model.Teacher;
 import dao_and_model.connection_pool.ConnectionPool;
 import org.apache.log4j.Logger;
 

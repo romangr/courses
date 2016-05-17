@@ -39,8 +39,8 @@ public class CourseServlet extends HttpServlet {
     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
-        UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+        CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
+        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
         Optional<Course> courseOptional = ofNullable(req.getParameter("id"))
                 .flatMap((id) -> courseDao.getById(parseInt(id)));
@@ -55,6 +55,12 @@ public class CourseServlet extends HttpServlet {
             userDao.getUserByEmail(req.getUserPrincipal().getName())
                     .ifPresent(user -> {
                         req.setAttribute("user", user);
+
+                        if (courseOptional.get().getStatus() == 2 && req.isUserInRole("student")) {
+                            courseDao.getTeachersConclusion(courseOptional.get(), (Student) user)
+                                    .ifPresent(teachersConclusion -> req.setAttribute("teachersConclusion", teachersConclusion));
+                        }
+
                         Collection<Course> userCourses = courseDao.getUserCourses(user);
                         LOGGER.trace("userCourses size = " + userCourses.size());
                         if (userCourses.contains(course)) {
@@ -81,8 +87,8 @@ public class CourseServlet extends HttpServlet {
     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CourseDao courseDao = (PgCourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
-        UserDao userDao = (PgUserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
+        CourseDao courseDao = (CourseDao) getServletContext().getAttribute(DaoProvider.COURSE_DAO);
+        UserDao userDao = (UserDao) getServletContext().getAttribute(DaoProvider.USER_DAO);
 
         ofNullable(req.getParameter(COURSE_ID))
                 .ifPresent(courseId -> {

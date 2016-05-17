@@ -1,5 +1,6 @@
 package dao_and_model;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import lombok.Data;
  * 25.04.2016 Roman.
  */
 @Data
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class Course implements Model {
 
     private final int id;

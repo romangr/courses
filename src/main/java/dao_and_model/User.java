@@ -1,5 +1,6 @@
 package dao_and_model;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
  * Domain model object User.
  * Roman 15.04.2016.
  */
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class User implements Model {
     @Getter
     private final int id;
