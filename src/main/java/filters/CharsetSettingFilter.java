@@ -1,6 +1,5 @@
 package filters;
 
-import listeners.DaoProvider;
 import org.apache.log4j.Logger;
 
 import javax.servlet.FilterChain;

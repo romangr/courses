@@ -19,12 +19,14 @@ public class CloseCourseTableBodyTag extends BodyTagSupport {
     private int courseId;
     private Locale locale;
     private ResourceBundle localeStrings;
+    private int size;
 
     public void setLocale(Locale locale) {
         this.locale = locale;
     }
     public void setNum(int num) {
         this.num = num;
+        this.size = num;
     }
     public void setCourseId(int courseId) {
         this.courseId = courseId;
@@ -36,7 +38,7 @@ public class CloseCourseTableBodyTag extends BodyTagSupport {
         try {
             pageContext.getOut().write(
                     "<form method=\"post\" action=\"/course/manage\"><table style=\"border: 3px solid #000; width: 100%\">");
-            if (num > 0) {
+            if (size > 0) {
                 return EVAL_BODY_INCLUDE;
             } else {
                 pageContext.getOut().write(localeStrings.getString("closeCourse.noStudents"));
@@ -57,7 +59,7 @@ public class CloseCourseTableBodyTag extends BodyTagSupport {
     public int doEndTag() throws JspException {
         String submit = localeStrings.getString("closeCourse.submit");
         try {
-            if (num > 0) {
+            if (size > 0) {
                 pageContext.getOut().write("<tr>" +
                         "<td> <input type=\"submit\" value=\""+ submit +"\"/>" +
                         "<input type=\"hidden\" value=\"closeCourse\" name=\"action\">" +

@@ -1,8 +1,10 @@
 package dao_and_model;
 
+import dao_and_model.dao_interfaces.QueriesResolver;
 import dao_and_model.dao_interfaces.UserDao;
 import exceptions.SameEmailRegistrationException;
 import dao_and_model.connection_pool.ConnectionPool;
+import org.apache.log4j.Logger;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
@@ -15,6 +17,7 @@ import java.util.*;
 public class PgUserDao implements UserDao {
 
     private final ConnectionPool connectionPool;
+    private static final Logger LOGGER = Logger.getLogger(PgUserDao.class.getName());
 
     public Student createStudent(String firstName, String lastName,
                                  String email, String password) throws SameEmailRegistrationException {
@@ -27,7 +30,8 @@ public class PgUserDao implements UserDao {
     }
 
     public void update(User user) {
-        String sql = "UPDATE users SET first_name=(?), last_name=(?), password=(?) where id=(?)";
+        //language=PostgreSQL
+        String sql = "UPDATE users SET first_name=(?), last_name=(?), password=(?) WHERE id=(?)";
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement statement = getStatement(connection, sql)) {
             statement.setString(1, user.getFirstName());
@@ -36,7 +40,7 @@ public class PgUserDao implements UserDao {
             statement.setInt(4, user.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -49,11 +53,12 @@ public class PgUserDao implements UserDao {
             statement.setInt(1, user.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     public Optional<User> getById(int id) {
+        //language=PostgreSQL
         String sql = "SELECT first_name, last_name, email, password, type FROM users WHERE id=(?)";
         User result = null;
         try (Connection connection = connectionPool.takeConnection();
@@ -80,63 +85,34 @@ public class PgUserDao implements UserDao {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return Optional.ofNullable(result);
     }
 
     public List<Student> getAllStudents() {
-        String sql = "SELECT id, first_name, last_name, email, password FROM users WHERE type=0";
-        ArrayList<Student> students = new ArrayList<>();
-        try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                students.add(new Student(
-                        rs.getInt("id"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("email"),
-                        rs.getString("password")));
-            }
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return students;
+        //language=PostgreSQL
+        String sql = "SELECT id uid, first_name, last_name, email, password FROM users WHERE type=0";
+        return new ArrayList<>(QueriesResolver.resolve(sql, connectionPool, LOGGER, QueriesResolver::handleStudentResultSet));
     }
 
     public List<Teacher> getAllTeachers() {
-        String sql = "SELECT id, first_name, last_name, email, password FROM users WHERE type=1";
-        ArrayList<Teacher> students = new ArrayList<>();
-        try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                students.add(new Teacher(
-                        rs.getInt("id"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("email"),
-                        rs.getString("password")));
-            }
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return students;
+        //language=PostgreSQL
+        String sql = "SELECT id uid, first_name, last_name, email, password FROM users WHERE type=1";
+        return new ArrayList<>(QueriesResolver.resolve(sql, connectionPool, LOGGER, QueriesResolver::handleTeacherResultSet));
     }
 
     /**
-    * @return new instance of {@link dao_and_model.Student} or {@link dao_and_model.Teacher}
-    * @param type if 0 then User, if 1 then Teacher
-    */
+     * @param type if 0 then User, if 1 then Teacher
+     * @return new instance of {@link dao_and_model.Student} or {@link dao_and_model.Teacher}
+     */
     private User createUser(String firstName, String lastName,
                             String email, String password, int type) throws SameEmailRegistrationException {
+        //language=PostgreSQL
         String sql = "INSERT INTO users (first_name, last_name, email, password, type) VALUES (?,?,?,?,?)";
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement statement = getStatement(connection, sql);
-            Statement roleSetStatement = connection.createStatement()) {
+             Statement roleSetStatement = connection.createStatement()) {
             statement.setString(1, firstName);
             statement.setString(2, lastName);
             statement.setString(3, email);
@@ -172,13 +148,14 @@ public class PgUserDao implements UserDao {
     }
 
     public Optional<User> getUserByEmail(String email) {
+        //language=PostgreSQL
         String sql = "SELECT id, first_name, last_name, password, type FROM users WHERE email=(?)";
         User result = null;
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 switch (rs.getInt("type")) {
                     case 0:
                         result = new Student(
@@ -200,42 +177,21 @@ public class PgUserDao implements UserDao {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return Optional.ofNullable(result);
     }
 
     public Collection<Student> getStudentsOnCourse(Course course, boolean withoutMark) {
+        //language=PostgreSQL
         String sql = "SELECT users.id uid, users.first_name, users.last_name, users.email, users.password " +
                 "FROM student_course join users " +
                 "ON student_course.student_id = users.id " +
-                "WHERE course_id = (?)" + ((withoutMark) ? " AND student_course.mark IS NULL" : "");
-        Collection<Student> result = new HashSet<>();
-        try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, course.getId());
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                result.add(new Student(
-                        rs.getInt("uid"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("email"),
-                        rs.getString("password")
-                ));
-            }
-            rs.close();
-            return result;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+                "WHERE course_id = " + course.getId() + ((withoutMark) ? " AND student_course.mark IS NULL" : "");
+        return QueriesResolver.resolve(sql, connectionPool, LOGGER, QueriesResolver::handleStudentResultSet);
     }
 
     PgUserDao(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
     }
-
-    /*private PreparedStatement getStatement(Connection connection, String sql) throws SQLException {
-        return connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-    }*/
 }

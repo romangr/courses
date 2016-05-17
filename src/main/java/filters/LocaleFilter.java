@@ -1,6 +1,5 @@
 package filters;
 
-import listeners.DaoProvider;
 import org.apache.log4j.Logger;
 
 import javax.servlet.FilterChain;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Optional;
 

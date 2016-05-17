@@ -1,4 +1,4 @@
-package servlets;
+package servlets.services;
 
 import dao_and_model.dao_interfaces.UserDao;
 import dao_and_model.PgUserDao;
@@ -74,6 +74,7 @@ public class SignUpServlet extends HttpServlet {
                 }
                 resp.sendRedirect("/my");
             } catch (SameEmailRegistrationException e) {
+                LOGGER.debug(e);
                 giveAnotherTryWithMessage(req, resp, "This email is already in use");
             }
         }

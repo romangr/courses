@@ -3,6 +3,8 @@ package dao_and_model;
 import dao_and_model.connection_pool.ConnectionPool;
 import dao_and_model.dao_interfaces.CourseDao;
 import dao_and_model.dao_interfaces.QueriesResolver;
+import filters.IndexSetBeanFilter;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.*;
@@ -16,6 +18,7 @@ import static dao_and_model.Course.OPEN;
 public class PgCourseDao implements CourseDao {
 
     private final ConnectionPool connectionPool;
+    private static final Logger LOGGER = Logger.getLogger(PgCourseDao.class.getName());
 
     public Course create(Teacher teacher, String name, String description) {
         //language=PostgreSQL
@@ -31,6 +34,7 @@ public class PgCourseDao implements CourseDao {
             int id = (int) generatedKeys.getLong(1);
             return new Course(id, teacher, name, description, OPEN);
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -46,6 +50,7 @@ public class PgCourseDao implements CourseDao {
             statement.setInt(4, course.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -58,15 +63,17 @@ public class PgCourseDao implements CourseDao {
             statement.setInt(1, course.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
     public Optional<Course> getById(int id) {
-        String sql = "SELECT  name, description, status, users.id as uid, users.first_name, users.last_name, " +
+        //language=PostgreSQL
+        String sql = "SELECT  course.id cid, name, description, status, users.id as uid, users.first_name, users.last_name, " +
                 "users.email, users.password" +
                 " FROM course join users on course.teacher_id = users.id WHERE course.id=" + id;
-        Set<Course> courseSet = QueriesResolver.resolve(sql, connectionPool, QueriesResolver::handleCourseResultSet);
+        Set<Course> courseSet = QueriesResolver.resolve(sql, connectionPool, LOGGER, QueriesResolver::handleCourseResultSet);
         if (courseSet.size() == 0) {
             return Optional.empty();
         } else {
@@ -75,41 +82,17 @@ public class PgCourseDao implements CourseDao {
     }
 
     public Collection<Course> getAll() {
+        //language=PostgreSQL
         String sql = "SELECT course.id as cid, name, description, status, users.id as uid, " +
                 "users.first_name, users.last_name, users.email, users.password" +
                 " FROM course join users on course.teacher_id = users.id";
-        ArrayList<Course> courses = new ArrayList<>();
-        /*try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                courses.add(new Course(
-                        rs.getInt("cid"),
-                        new Teacher(
-                                rs.getInt("uid"),
-                                rs.getString("first_name"),
-                                rs.getString("last_name"),
-                                rs.getString("email"),
-                                rs.getString("password")),
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getInt("status")
-                ));
-            }
-            rs.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }*/
-        return QueriesResolver.resolve(sql, connectionPool, QueriesResolver::handleCourseResultSet);
+
+        return QueriesResolver.resolve(sql, connectionPool, LOGGER, QueriesResolver::handleCourseResultSet);
     }
 
     public Set<Course> getAvailableCourses() {
         return getAvailableCourses(0, 0);
     }
-
-    /*private PreparedStatement getStatement(Connection connection, String sql) throws SQLException {
-        return connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-    }*/
 
     /**
     * @return collection of {@link dao_and_model.Course} contains all the courses students is subscribed on or all the courses were created by teacher.
@@ -150,6 +133,7 @@ public class PgCourseDao implements CourseDao {
             }
             rs.close();
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -230,43 +214,21 @@ public class PgCourseDao implements CourseDao {
 
     @Override
     public Collection<Course> getUserCourses(User user, int from, int count) {
+        //language=PostgreSQL
         String sql = "SELECT DISTINCT course.id cid, course.name, course.description, course.status, " +
                 "users.id uid, users.first_name, users.last_name, users.email, users.password " +
                 "FROM course JOIN users " +
                 "ON course.teacher_id = users.id " +
                 "LEFT JOIN student_course ON " +
                 "course.id = student_course.course_id WHERE " +
-                ((user instanceof Student) ? "student_id = " : "teacher_id = " + user.getId());
+                ((user instanceof Student) ? "student_id = " : "teacher_id = ") + user.getId();
         if (count != 0) {
             sql += " LIMIT " + count;
         }
         if (from != 0) {
             sql += " OFFSET " + from;
         }
-        return QueriesResolver.resolve(sql, connectionPool, QueriesResolver::handleCourseResultSet);
-        /*System.out.println(sql);
-        Collection<Course> result = new HashSet<>();
-        try (Connection connection = connectionPool.takeConnection();
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sql)) {
-            while (rs.next()) {
-                result.add(new Course(
-                        rs.getInt("cid"),
-                        new Teacher(
-                                rs.getInt("uid"),
-                                rs.getString("first_name"),
-                                rs.getString("last_name"),
-                                rs.getString("email"),
-                                rs.getString("password")),
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getInt("status")));
-            }
-            System.out.println(result.size());
-            return result;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }*/
+        return QueriesResolver.resolve(sql, connectionPool, LOGGER, QueriesResolver::handleCourseResultSet);
     }
 
     /**
