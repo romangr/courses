@@ -16,7 +16,7 @@ import java.util.Optional;
  * Roman 15.05.2016.
  */
 public interface UserDao extends Dao<User> {
-    public Student createStudent(String firstName, String lastName,
+    Student createStudent(String firstName, String lastName,
                                  String email, String password) throws SameEmailRegistrationException;
     Teacher createTeacher(String firstName, String lastName,
                           String email, String password) throws SameEmailRegistrationException;

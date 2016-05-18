@@ -19,6 +19,7 @@ public class PgCourseDao implements CourseDao {
     private final ConnectionPool connectionPool;
     private static final Logger LOGGER = Logger.getLogger(PgCourseDao.class.getName());
 
+    @Override
     public Course create(Teacher teacher, String name, String description) {
         //language=PostgreSQL
         String sql = "INSERT INTO course (teacher_id, name, description) VALUES (?,?,?)";
@@ -38,6 +39,7 @@ public class PgCourseDao implements CourseDao {
         }
     }
 
+    @Override
     public void update(Course course) {
         //language=PostgreSQL
         String sql = "UPDATE course SET name=(?), description=(?), status=(?) where id=(?)";
@@ -54,6 +56,7 @@ public class PgCourseDao implements CourseDao {
         }
     }
 
+    @Override
     public void delete(Course course) {
         //language=PostgreSQL
         String sql = "DELETE FROM course where id=(?)";
@@ -67,6 +70,7 @@ public class PgCourseDao implements CourseDao {
         }
     }
 
+    @Override
     public Optional<Course> getById(int id) {
         //language=PostgreSQL
         String sql = "SELECT  course.id cid, name, description, status, users.id as uid, users.first_name, users.last_name, " +
@@ -80,6 +84,7 @@ public class PgCourseDao implements CourseDao {
         }
     }
 
+    @Override
     public Collection<Course> getAll() {
         //language=PostgreSQL
         String sql = "SELECT course.id as cid, name, description, status, users.id as uid, " +
@@ -89,6 +94,7 @@ public class PgCourseDao implements CourseDao {
         return QueriesResolver.resolve(sql, connectionPool, LOGGER, QueriesResolver::handleCourseResultSet);
     }
 
+    @Override
     public Set<Course> getAvailableCourses() {
         return getAvailableCourses(0, 0);
     }
@@ -101,18 +107,21 @@ public class PgCourseDao implements CourseDao {
         return getUserCourses(user, 0, 0);
     }
 
+    @Override
     public boolean addCourseToStudent(Course course, Student student) {
         //language=PostgreSQL
         String sql = "INSERT INTO student_course (student_id, course_id) VALUES (?, ?)";
         return updateStudentCourses(course, student, sql);
     }
 
+    @Override
     public boolean deleteCourseFromStudent(Course course, Student student) {
         //language=PostgreSQL
         String sql = "DELETE FROM student_course WHERE student_id = (?) AND course_id = (?)";
         return updateStudentCourses(course, student, sql);
     }
 
+    @Override
     public void setStudentsMarkAndNote(Course course, Student student, int mark, String note) {
         //language=PostgreSQL
         String sql = "UPDATE student_course " +
@@ -166,7 +175,7 @@ public class PgCourseDao implements CourseDao {
                 "WHERE status = 0";
         try (Connection connection = connectionPool.takeConnection();
              Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sql);) {
+             ResultSet rs = statement.executeQuery(sql)) {
             if (rs.next()) {
                 return rs.getInt("available_courses");
             } else {
@@ -254,7 +263,7 @@ public class PgCourseDao implements CourseDao {
     }
 
     /**
-    * Subscribe user on new course and avoid code duplication  
+    * Subscribe student on new course and avoid code duplication
     */
     private boolean updateStudentCourses(Course course, Student student, String sql) {
         try (Connection connection = connectionPool.takeConnection();

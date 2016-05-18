@@ -18,16 +18,19 @@ public class PgUserDao implements UserDao {
     private final ConnectionPool connectionPool;
     private static final Logger LOGGER = Logger.getLogger(PgUserDao.class.getName());
 
+    @Override
     public Student createStudent(String firstName, String lastName,
                                  String email, String password) throws SameEmailRegistrationException {
         return (Student) createUser(firstName, lastName, email, password, 0);
     }
 
+    @Override
     public Teacher createTeacher(String firstName, String lastName,
                                  String email, String password) throws SameEmailRegistrationException {
         return (Teacher) createUser(firstName, lastName, email, password, 1);
     }
 
+    @Override
     public void update(User user) {
         //language=PostgreSQL
         String sql = "UPDATE users SET first_name=(?), last_name=(?), password=(?) WHERE id=(?)";
@@ -43,6 +46,7 @@ public class PgUserDao implements UserDao {
         }
     }
 
+    @Override
     public void delete(User user) {
         //language=PostgreSQL
         String sql = "DELETE FROM users where id=(?);" +
@@ -56,6 +60,7 @@ public class PgUserDao implements UserDao {
         }
     }
 
+    @Override
     public Optional<User> getById(int id) {
         //language=PostgreSQL
         String sql = "SELECT first_name, last_name, email, password, type FROM users WHERE id=(?)";
@@ -89,12 +94,14 @@ public class PgUserDao implements UserDao {
         return Optional.ofNullable(result);
     }
 
+    @Override
     public List<Student> getAllStudents() {
         //language=PostgreSQL
         String sql = "SELECT id uid, first_name, last_name, email, password FROM users WHERE type=0";
         return new ArrayList<>(QueriesResolver.resolve(sql, connectionPool, LOGGER, QueriesResolver::handleStudentResultSet));
     }
 
+    @Override
     public List<Teacher> getAllTeachers() {
         //language=PostgreSQL
         String sql = "SELECT id uid, first_name, last_name, email, password FROM users WHERE type=1";
@@ -146,6 +153,7 @@ public class PgUserDao implements UserDao {
         }
     }
 
+    @Override
     public Optional<User> getUserByEmail(String email) {
         //language=PostgreSQL
         String sql = "SELECT id, first_name, last_name, password, type FROM users WHERE email=(?)";
@@ -181,6 +189,7 @@ public class PgUserDao implements UserDao {
         return Optional.ofNullable(result);
     }
 
+    @Override
     public Collection<Student> getStudentsOnCourse(Course course, boolean withoutMark) {
         //language=PostgreSQL
         String sql = "SELECT users.id uid, users.first_name, users.last_name, users.email, users.password " +

@@ -15,6 +15,10 @@ interface Dao<T> {
     void delete(T entity);
     Optional<T> getById(int id);
 
+    /**
+     * @return new PreparedStatement from connection with ability to get generated keys
+     * @throws SQLException
+     */
     default PreparedStatement getStatement(Connection connection, String sql) throws SQLException {
         return connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     }

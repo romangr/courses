@@ -20,7 +20,8 @@ public interface CourseDao extends Dao<Course> {
     Set<Course> getAvailableCourses();
 
     /**
-     * @return all {@link dao_and_model.Course}, user is subscribed to
+     * @return collection of {@link dao_and_model.Course} contains all the courses students is subscribed on or all the courses were created by teacher.
+     * @param user {@link dao_and_model.Student} or {@link dao_and_model.Teacher}
      */
     Collection<Course> getUserCourses(User user);
     Collection<Course> getAll();
@@ -32,7 +33,7 @@ public interface CourseDao extends Dao<Course> {
     boolean addCourseToStudent(Course course, Student student);
 
     /**
-    * Unubscribe user from new course.
+    * Unsubscribe user from new course.
     * @return is operation succesful
     */
     boolean deleteCourseFromStudent(Course course, Student student);
