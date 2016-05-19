@@ -23,6 +23,7 @@ public class CourseDaoTest {
         Course course = courseDao.create(teacher, "course name", "description");
         assertTrue(course.getId() > 0);
         userDao.delete(teacher);
+        courseDao.delete(course);
     }
 
     @Test
@@ -34,6 +35,7 @@ public class CourseDaoTest {
         course = courseDao.getById(course.getId()).get();
         assertThat(course.getDescription(), is("new description"));
         userDao.delete(teacher);
+        courseDao.delete(course);
     }
 
     @Test

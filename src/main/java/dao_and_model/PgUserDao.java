@@ -54,7 +54,7 @@ public class PgUserDao implements UserDao {
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement statement = getStatement(connection, sql)) {
             statement.setInt(1, user.getId());
-            statement.executeUpdate();
+            statement.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
